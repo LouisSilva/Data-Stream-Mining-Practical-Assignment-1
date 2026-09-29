@@ -1,0 +1,15 @@
+import yaml
+from pathlib import Path
+
+def load_yaml_config(path: str = "config.yaml") -> dict:
+    with open(path, "r") as f:
+        return yaml.safe_load(f)
+
+def find_project_root() -> Path:
+    current = Path(Path.cwd()).resolve()
+
+    for directory in [current, *current.parents]:
+        if (directory / ".gitignore").exists():
+            return directory
+
+    raise FileNotFoundError("Couldn't find project root")
