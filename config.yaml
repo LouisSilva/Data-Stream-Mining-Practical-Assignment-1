@@ -1,3 +1,9 @@
+random_seed: 42
+
+plotting:
+  overleaf_text_width_pt: 463.7796
+  overleaf_font_size: 11
+
 api_parameters:
   url: "https://archive-api.open-meteo.com/v1/archive"
   start_date: "2020-01-01"
@@ -14,7 +20,50 @@ api_parameters:
 data:
   raw_directory: "data/raw" # Un-processed data
   # clean_directory: "data/clean" # Processed data # Idk if we need this
+  target: "rain_event"
 
-plotting:
-  overleaf_text_width_pt: 463.7796
-  overleaf_font_size: 11
+cleaning:
+  datetime_format: "%Y-%m-%d %H:%M:%S"
+  column_types:
+    datetime: ["time"]
+  domain_rules:
+    relative_humidity_2m: {min: 0, max: 100}
+    precipitation: {min: 0}
+    wind_speed_10m: {min: 0}
+
+models:
+  gaussian_naive_bayes:
+    params: {}
+    
+  online_logistic_regression:
+    params:
+      l2: 0.0
+    optimizer:
+      name: "SGD"
+      params:
+        lr: 0.05
+    standardize: true
+      
+  hoeffding_tree:
+    params:
+      grace_period: 50
+      delta: 0.001
+      tau: 0.10
+      leaf_prediction: "mc"
+    
+  online_bagging:
+    params:
+      random_seed: 42
+      ensemble_size: 5
+    
+  adaptive_random_forest:
+    params:
+      random_seed: 42
+      n_models: 5
+      max_features: "sqrt"
+      lambda_value: 6
+      grace_period: 30
+      delta: 0.001
+      tau: 0.10
+      leaf_prediction: "mc"
+      
