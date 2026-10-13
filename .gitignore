@@ -15,4 +15,6 @@ temp/
 *.xml
 *.gz
 *.pdf
+*.bbl
+*.blg
 objective.md

@@ -13,7 +13,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{microtype}
-\usepackage[a4paper,top=2.15cm,bottoxm=2.30cm,left=2.35cm,right=2.35cm,headheight=22pt]{geometry}
+\usepackage[a4paper,top=2.15cm,bottom=2.30cm,left=2.35cm,right=2.35cm,headheight=22pt]{geometry}
 \usepackage[table]{xcolor}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -23,9 +23,7 @@
 \usepackage{enumitem}
 \usepackage{amsmath,amssymb}
 \usepackage{tikz}
-%\usepackage[most]{tcolorbox}
-\usepackage{tcolorbox}
-\tcbuselibrary{skins,breakable}
+\usepackage[most]{tcolorbox}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
 \usepackage{lastpage}
@@ -95,12 +93,12 @@
 \setstretch{1.03}
 
 \hypersetup{
-  colorlinks=true,
-  linkcolor=Navy,
-  urlcolor=Teal,
-  citecolor=Navy,
-  pdftitle={Practical Assignment I - Technical Report - \AssignmentCode},
-  pdfauthor={\StudentA\ and \StudentB}
+	colorlinks=true,
+	linkcolor=Navy,
+	urlcolor=Teal,
+	citecolor=Navy,
+	pdftitle={Practical Assignment I - Technical Report - \AssignmentCode},
+	pdfauthor={\StudentA\ and \StudentB}
 }
 
 \pagestyle{fancy}
@@ -114,60 +112,60 @@
 \renewcommand{\footrulewidth}{0pt}
 
 \titleformat{\section}
-  {\Large\bfseries\color{Navy}}
-  {\thesection}{0.65em}{}
-  [\vspace{0.15em}\color{Mint}\titlerule]
+{\Large\bfseries\color{Navy}}
+{\thesection}{0.65em}{}
+[\vspace{0.15em}\color{Mint}\titlerule]
 \titleformat{\subsection}
-  {\large\bfseries\color{Teal}}
-  {\thesubsection}{0.55em}{}
+{\large\bfseries\color{Teal}}
+{\thesubsection}{0.55em}{}
 \titlespacing*{\section}{0pt}{1.15em}{0.55em}
 \titlespacing*{\subsection}{0pt}{0.95em}{0.35em}
 
 \newtcolorbox{keybox}[1][]{
-  enhanced,breakable,colback=PaleMint,colframe=Teal,
-  boxrule=0.8pt,leftrule=4pt,arc=2mm,
-  left=4mm,right=4mm,top=3mm,bottom=3mm,
-  before skip=0.7em,after skip=0.7em,
-  fonttitle=\bfseries\color{Navy},#1
+	enhanced,breakable,colback=PaleMint,colframe=Teal,
+	boxrule=0.8pt,leftrule=4pt,arc=2mm,
+	left=4mm,right=4mm,top=3mm,bottom=3mm,
+	before skip=0.7em,after skip=0.7em,
+	fonttitle=\bfseries\color{Navy},#1
 }
 \newtcolorbox{businessbox}[1][]{
-  enhanced,breakable,colback=PaleBlue,colframe=Navy,
-  boxrule=0.8pt,leftrule=4pt,arc=2mm,
-  left=4mm,right=4mm,top=3mm,bottom=3mm,
-  before skip=0.7em,after skip=0.7em,
-  fonttitle=\bfseries\color{Navy},#1
+	enhanced,breakable,colback=PaleBlue,colframe=Navy,
+	boxrule=0.8pt,leftrule=4pt,arc=2mm,
+	left=4mm,right=4mm,top=3mm,bottom=3mm,
+	before skip=0.7em,after skip=0.7em,
+	fonttitle=\bfseries\color{Navy},#1
 }
 \newtcolorbox{warningbox}[1][]{
-  enhanced,breakable,colback=WarningBG,colframe=WarningLine,
-  boxrule=0.8pt,leftrule=4pt,arc=2mm,
-  left=4mm,right=4mm,top=3mm,bottom=3mm,
-  before skip=0.7em,after skip=0.7em,
-  fonttitle=\bfseries\color{Navy},#1
+	enhanced,breakable,colback=WarningBG,colframe=WarningLine,
+	boxrule=0.8pt,leftrule=4pt,arc=2mm,
+	left=4mm,right=4mm,top=3mm,bottom=3mm,
+	before skip=0.7em,after skip=0.7em,
+	fonttitle=\bfseries\color{Navy},#1
 }
 \newtcolorbox{instructionbox}[1][]{
-  enhanced,breakable,colback=PromptBG,colframe=RuleGrey,
-  boxrule=0.6pt,arc=1.5mm,
-  left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm,
-  before skip=0.55em,after skip=0.65em,
-  fonttitle=\bfseries\color{SecondaryText},#1
+	enhanced,breakable,colback=PromptBG,colframe=RuleGrey,
+	boxrule=0.6pt,arc=1.5mm,
+	left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm,
+	before skip=0.55em,after skip=0.65em,
+	fonttitle=\bfseries\color{SecondaryText},#1
 }
 
 \newcommand{\instruction}[1]{%
-  \ifdraftinstructions
-    \begin{instructionbox}[title=What to write here]
-      \small\color{SecondaryText}#1
-    \end{instructionbox}
-  \fi
+	\ifdraftinstructions
+	\begin{instructionbox}[title=What to write here]
+		\small\color{SecondaryText}#1
+	\end{instructionbox}
+	\fi
 }
 
 \newcommand{\draftbanner}{%
-  \ifdraftinstructions
-    \begin{warningbox}[title=Template mode is ON]
-      \small This PDF still displays writing guidance. Before final submission, change
-      \texttt{\string\draftinstructionstrue} to
-      \texttt{\string\draftinstructionsfalse} near the top of \texttt{main.tex} and compile again.
-    \end{warningbox}
-  \fi
+	\ifdraftinstructions
+	\begin{warningbox}[title=Template mode is ON]
+		\small This PDF still displays writing guidance. Before final submission, change
+		\texttt{\string\draftinstructionstrue} to
+		\texttt{\string\draftinstructionsfalse} near the top of \texttt{main.tex} and compile again.
+	\end{warningbox}
+	\fi
 }
 
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
@@ -176,459 +174,486 @@
 
 % Figure helper: the template compiles even before students upload the image.
 \newcommand{\reportfigure}[4][0.88\textwidth]{%
-\begin{figure}[H]
-\centering
-\IfFileExists{#2}{%
-  \includegraphics[width=#1]{#2}%
-}{%
-  \fbox{\parbox[c][4.0cm][c]{0.82\textwidth}{\centering
-  \color{SecondaryText}\textbf{Figure placeholder}\\[0.4em]
-  Upload \texttt{\detokenize{#2}} to the Overleaf project,\\
-  or replace this figure call with your own file.}}
-}
-\caption{#3}
-\label{#4}
-\end{figure}
+	\begin{figure}[H]
+		\centering
+		\IfFileExists{#2}{%
+			\includegraphics[width=#1]{#2}%
+		}{%
+			\fbox{\parbox[c][4.0cm][c]{0.82\textwidth}{\centering
+					\color{SecondaryText}\textbf{Figure placeholder}\\[0.4em]
+					Upload \texttt{\detokenize{#2}} to the Overleaf project,\\
+					or replace this figure call with your own file.}}
+		}
+		\caption{#3}
+		\label{#4}
+	\end{figure}
 }
 
 % -----------------------------------------------------------------------------%
 % DOCUMENT
 % -----------------------------------------------------------------------------%
 \begin{document}
-\pagenumbering{gobble}
-
-% COVER PAGE
-\begin{titlepage}
-\pagecolor{Navy}
-\color{white}
-\vspace*{1.25cm}
-{\small\bfseries\color{Mint}\MakeUppercase{Data Stream Mining \;\textbullet\; NOVA IMS}}\\[0.85cm]
-{\Huge\bfseries Practical Assignment I}\\[0.30cm]
-{\fontsize{25}{29}\selectfont\bfseries Technical Report}\\[0.55cm]
-{\Large\color{Mint}Business-Oriented Data Stream Mining}\\[1.05cm]
-
-\begin{tcolorbox}[colback=white!7!Navy,colframe=Mint,boxrule=0.8pt,arc=2mm,left=5mm,right=5mm,top=4mm,bottom=4mm]
-\color{white}
-\begin{tabularx}{\textwidth}{@{}L{4.3cm}Y@{}}
-\textbf{Assignment code} & \AssignmentCode \\
-\textbf{Business scenario} & \BusinessScenario \\
-\textbf{Cities} & \CityA\ vs. \CityB \\
-\textbf{Event target} & \EventTarget \\
-\textbf{Historical period} & \HistoricalPeriod \\
-\end{tabularx}
-\end{tcolorbox}
-
-\vspace{0.75cm}
-\begin{tabularx}{\textwidth}{@{}YY@{}}
-\textbf{Student A} & \textbf{Student B} \\
-\StudentA & \StudentB \\
-\StudentAID & \StudentBID \\
-Primary city: \CityA & Primary city: \CityB \\
-\end{tabularx}
-
-\vfill
-{\large\bfseries Submission date: \SubmissionDate}\\[0.15cm]
-{\normalsize\color{white!75}Expected main-body length: 6--8 pages, excluding cover, references, and optional appendix.}
-
-\ifdraftinstructions
-\vspace{0.55cm}
-{\small\bfseries\color{Mint}TEMPLATE MODE - WRITING GUIDANCE IS CURRENTLY VISIBLE}
-\fi
-\vspace*{0.55cm}
-\end{titlepage}
-\nopagecolor
-\color{BodyText}
-\pagenumbering{arabic}
-\setcounter{page}{1}
-
-\draftbanner
-
-\begin{keybox}[title=Formatting rule]
-Do not modify the report structure, section order, margins, body font size, or page geometry. You may add subsections where useful, but keep the mandatory sections below. Delete unused optional figure placeholders rather than filling space unnecessarily.
-\end{keybox}
-
-% =============================================================================
-\section{Business Context and Objective}
-% =============================================================================
-\instruction{Briefly describe the assigned business problem and the operational decision to be supported. Identify the two cities and the event target. Explain why this event matters to the business. End the section with one concise objective or guiding question. Do not make the recommendation yet. Suggested length: about half a page.}
-
-The assigned business is an urban walking tour operator that operates in Lisboa and Porto. Weather conditions, such as rain, can cause a tour to be cancelled, postponed, or rescheduled. As a result, being able to predict these rain events is valuable. In this report, we define a ``rain event'' as the precipitation at time $t$ being greater than or equal to $0.1\mathrm{mm}$.
-
-An important point is that \CityA, for example, could have greater total precipitation than \CityB, or more rain events, but the occurrence of the events in \CityB\ may be more irregular and harder to predict. Hence, the question is not simply ``which city rains the most''. The objective of this study is therefore to determine which of the two cities, \CityA\ and \CityB, offers more predictable conditions for scheduling walking tours with fewer rain interruptions.
-
-% =============================================================================
-\section{Data and Stream Construction}
-% =============================================================================
-\instruction{Describe the Open-Meteo data source, historical period, weather variables, sampling frequency, chronological ordering, warm-up, preprocessing, target construction, and any cleaning decisions. Explain how potential outliers were inspected. Remember: valid extreme weather observations are not automatically errors. State explicitly that future information was not used to construct current inputs. Suggested length: half to one page.}
-
-\subsection{Stream configuration}
-The data collected for this assignment was gathered through the Open-Meteo Historical Weather API (\cite{openmeteo}). \autoref{tab:stream-config} shows the API endpoint used, the historical period of the data, sampling frequency, retrieved variables, warm-up rule, event target, threshold estimation method (in this case it's just an absolute rule), and random seed.
-
-\begin{table}[H]
-\centering
-\caption{Core stream and experimental configuration}
-\label{tab:stream-config}
-\begin{tabularx}{0.94\textwidth}{@{}L{5.2cm}Y@{}}
-\toprule
-\textbf{Item} & \textbf{Configuration used} \\
-\midrule
-Assignment code & \AssignmentCode \\
-API Endpoint URL & \texttt{https://archive-api.open-meteo.com/v1/archive} \\
-City A / City B & \CityA\ / \CityB \\
-Historical period & \HistoricalPeriod \\
-Sampling frequency & Hourly (1 observation per hour) \\
-Variables retrieved & \texttt{temperature\_2m}, \texttt{relative\_humidity\_2m}, \texttt{precipitation}, \texttt{wind\_speed\_10m} \\
-Warm-up rule & \WarmupRule \\
-Event target & \EventTarget \\
-Target definition / threshold & \TargetDefinition \\
-Threshold estimation & Absolute rule \\
-Random seed & \RandomSeed \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Target and temporal alignment}
-\instruction{Define the binary target mathematically or in precise pseudocode. Explain which observations are used as predictors at time $t$ and why the target-defining value at time $t$ is excluded from the inputs. If a threshold is data-driven, explain that it was estimated from the pooled warm-up only and then frozen.}
-
-As stated in \autoref{tab:stream-config}, the observations are hourly. Hence, observations at $t$ and $t+1$ are spaced one hour apart. For each time step $t$, we define the following observations:
-
-\begin{align}
-T_t &\in \mathbb{R} && \text{as the air temperature at 2m above ground level, measured in } ^\circ\mathrm{C}, \\
-H_t &\in [0,100] && \text{as the relative humidity at 2m above ground level, measured in } \%, \\
-P_t &\in \mathbb{R}_{\geq 0} && \text{as the precipitation accumulated over the preceding hour, measured in mm}, \\
-W_t &\in \mathbb{R}_{\geq 0} && \text{as the wind speed at 10m above ground level, measured in km/h}.
-\end{align}
-
-The binary rain-event target, $y_t \in \{0, 1\}$, is defined as:
-
-\begin{equation}
-\label{eq:rain-event}
-y_t \;\coloneqq\; \begin{cases}
-1 & \text{if} \;\; P_t \:\ge\: 0.1\mathrm{mm}, \\
-0 & \text{if} \;\; P_t \:<\: 0.1\mathrm{mm}.
-\end{cases}
-\end{equation}
-
-To construct the feature vector for predicting $y_t$, we use observations from time $t-1$. This is because the prediction at time $t$ must only use information available before time $t$. Using observations from time $t$ to predict the target at time $t$ would cause temporal leakage. This can result in a deceptively high model performance because the model is using information that would not be available at prediction time.
-
-% =============================================================================
-\section{City Analysis}
-% =============================================================================
-Before we analyse \CityA\ and \CityB, we will define some statistics. Let
-
-\begin{equation}
-W^T_m \;\coloneqq\; \{ y_i : \tau_m \le \tau_i < \tau_{m+1} \},
-\end{equation}
-
-be a tumbling window where $m$ represents a given month, $\tau_m$ is the timestamp at the start of month $m$, $\tau_{m+1}$ is the timestamp at the start of month $m+1$, and $\tau_i$ is the timestamp associated with observation $i$. Then, the percentage of observations where there is a rain event in month $m$ is given by:
-
-\begin{equation}
-\label{eq:R_m}
-R_m \;\coloneqq\; \frac{100}{\left\lvert W^T_m \right\rvert} \sum_{y_i \in W^T_m} y_i, \qquad R_m \in [0, 100].
-\end{equation}
-
-Specifically, $R_m$ denotes the percentage of observations in a given month $m$ that were rain events. In addition, let
-
-\begin{equation}
-W^{(24)}_{t-1} \;\coloneqq\; \{y_{t-24},\,y_{t-23},\,\dotsc,\,y_{t-1}\},
-\end{equation}
-
-be a sliding window containing the past $24$ observations. Then, the number of rain-event hours in the past $24$ hours is given by:
-
-\begin{equation}
-C^{(24)}_t \;\coloneqq \sum_{y_i \in W^{(24)}_{t-1}} y_i, \qquad C^{(24)}_t \in \{0,\,1,\,\dotsc,\,24\}.
-\end{equation}
-
-% =============================================================================
-\subsection{City A Analysis: \CityA}
-% =============================================================================
-\instruction{This section is primarily the responsibility of Student A. Characterise the stream for City A before interpreting the models. Include data quality observations, descriptive statistics, target class distribution, temporal behaviour, rolling/window evidence, and at least one analysis that is relevant to the assigned business context. Explain what the evidence means; do not simply describe the shape of a chart. Suggested length: about one page.}
-
-\begin{table}[H]
-\centering
-\caption{Selected descriptive and event statistics for \CityA. Replace or extend the rows when justified.}
-\label{tab:city-a-profile}
-\begin{tabularx}{0.88\textwidth}{@{}L{6.0cm}C{3.2cm}Y@{}}
-\toprule
-\textbf{Indicator} & \textbf{Value} & \textbf{Why it matters} \\
-\midrule
-Number of observations & $52608$ & Size of analysed stream \\
-Positive-event rate (\%) & $12.1\%$ & Frequency of rain-related interruption \\
-Selected weather statistic & -- & -- \\
-Selected rolling/window statistic & -- & -- \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\reportfigure{figures/Lisboa_monthly_rain_event_rate.pdf}{City A stream profile. Replace the caption with a precise statement of what the figure shows.}{fig:lisboa-monthly-rain-event-rate}
-
-
-% =============================================================================
-\subsection{City B Analysis: \CityB}
-% =============================================================================
-\instruction{This section is primarily the responsibility of Student B. Use the same analytical logic applied to City A so that the subsequent comparison is fair. Characterise data quality, descriptive behaviour, target distribution, temporal behaviour, and rolling/window evidence. Explain the operational meaning of the evidence. Suggested length: about one page.}
-
-In the \CityB\ stream, there were no missing values, no duplicates, and each observation was exactly one hour after its preceding observation. Furthermore, the gathered weather variables $T_t,\,H_t,\,P_t$ and $W_t$ were all within their correct domains. As a result, no cleaning was necessary. The binary target distribution for $y_t \in \{0,1\}$, defined in \autoref{eq:rain-event}, is:
-
-\begin{align}
-\Pr(y_t = 1) \;&\approx\; 0.204, \\
-\Pr(y_t = 0) \;&\approx\; 0.796.
-\end{align}
-
-This gives a positive-event rate of $20.4\%$, as shown in \autoref{tab:city-b-profile}. Equivalently, this means $20.4\%$ of the observations had at least $0.1\mathrm{mm}$ of precipitation. Interestingly, we have that $Q_{0.95} (P_t) = 0.9\mathrm{mm}$ and $\mathrm{std}(P_t) = 0.67\mathrm{mm}$, but $\max(P_t) = 21.5\mathrm{mm}$. This means that $95\%$ of observations had a precipitation of $0.9\mathrm{mm}$ or below, whilst the maximum indicates the presence of rare extreme precipitation values.
-
-The distribution of $H_t$ is negatively skewed, with a skewness of $-0.78$ and median of $81\%$. An interesting statistic is that among the observations classified as rain events,
-
-\begin{equation}
-\Pr(H_t \geq 50\% \mid y_t = 1) \;\approx\; 0.999.
-\end{equation}
-
-Thus, almost all rain events occurred when the relative humidity was at least $50\%$. The distribution of $T_t$ is relatively symmetric, with the mean and median being approximately equal to $15.5\,^\circ\mathrm{C}$, and the standard deviation being $4.8\,^\circ\mathrm{C}$. The distribution of $W_t$ is positively skewed, with a skewness of $0.86$ and median of $13\,\mathrm{km/h}$.
-
-\autoref{fig:porto-monthly-rain-event-rate} shows the monthly rain-event evolution by plotting $R_m$ (defined in \autoref{eq:R_m}) for all $m$. Intuitively, the rain-event rate tends to peak in winter, and dip in summer. \autoref{fig:porto-distribution-of-rainy-hours} shows the distribution of rainy hours within the 24-hour sliding window $C^{(24)}_t$.
-
-\begin{table}[H]
-\centering
-\caption{Selected descriptive and event statistics for \CityB.}
-\label{tab:city-b-profile}
-\begin{tabularx}{0.88\textwidth}{@{}L{6.0cm}C{3.2cm}Y@{}}
-\toprule
-\textbf{Indicator} & \textbf{Value} & \textbf{Why it matters} \\
-\midrule
-Number of observations & $52608$ & Size of analysed stream \\
-Positive-event rate (\%) & $20.4\%$ & Frequency of rain-related interruption \\
-$Q_{0.95}(P_t)$ & $0.9\mathrm{mm}$ & Characterises upper-tail hourly precipitation \\
-$Q_{0.90} \left(C^{(24)}_t \right)$ & 17 & Characterises upper-tail concentration of rain events within a 24-hour sliding window \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\reportfigure{figures/Porto_monthly_rain_event_rate.pdf}{Plotting the monthly rain-event rate $R_m$ for \CityB\ from \HistoricalPeriod.}{fig:porto-monthly-rain-event-rate}
-
-\reportfigure{figures/Porto_distribution_of_rainy_hours.pdf}{Plotting the distribution of rainy hours in the past $24$ hours, $C^{(24)}_t$, for \CityB\ from \HistoricalPeriod. The $y$-axis is plotted on a log scale.}{fig:porto-distribution-of-rainy-hours}
-
-
-% =============================================================================
-\section{Comparative Data Analysis}
-% =============================================================================
-\instruction{Compare the two cities before discussing classifier scores. Focus on differences that matter to the assigned business question: event frequency, variability, persistence, temporal patterns, operational thresholds, or other justified indicators. The comparison must use compatible definitions for both cities. This section is joint work. Suggested length: about one page.}
-
-\begin{table}[H]
-\centering
-\caption{Business-relevant comparison before modelling. Choose indicators that are meaningful for your assignment.}
-\label{tab:business-comparison}
-\begin{tabularx}{0.92\textwidth}{@{}Y C{3.0cm} C{3.0cm}@{}}
-\toprule
-\textbf{Indicator} & \textbf{\CityA} & \textbf{\CityB} \\
-\midrule
-Positive-event rate & -- & -- \\
-Selected variability / persistence measure & -- & -- \\
-Selected business-relevant statistic & -- & -- \\
-Additional group-designed indicator & -- & -- \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\reportfigure{figures/city_comparison.png}{Comparative evidence for \CityA\ and \CityB. Replace the caption with the specific analytical message.}{fig:city-comparison}
-
-
-% =============================================================================
-\section{Data Stream Mining Experiment}
-% =============================================================================
-\instruction{Describe the two required feature representations, the five mandatory learners, any optional model used, model parameters, the prequential protocol, and the evaluation metrics. Explain how the same chronological history was preserved within each city. If you investigate one model parameter, state the values compared and the criterion used to interpret the trade-off. Suggested length: one to one-and-a-half pages.}
-
-\subsection{Feature representations}
-\begin{businessbox}[title=Representation A - Previous-state features]
-At minimum, use lagged weather information such as temperature$(t-1)$, humidity$(t-1)$, precipitation$(t-1)$ and wind$(t-1)$. Adapt the exact set to the available variables while preserving the no-future-information rule.
-\end{businessbox}
-
-We define the feature vector for Representation A as:
-
-\begin{equation}
-X_t^A \;\coloneqq\; \left(T_{t-1},\,H_{t-1},\,P_{t-1},\,W_{t-1}\right).
-\end{equation}
-
-\begin{businessbox}[title=Representation B - Temporal stream context]
-Extend Representation A with justified recent context, for example rolling means, rolling standard deviations, recent deltas, or recent event frequency. All windowed features must use observations strictly before the prediction time.
-\end{businessbox}
-
-\begin{equation}
-X_t^B \;\coloneqq\; \left(X_{t-1}^A,\,C^{(24)}_{t-1}\right).
-\end{equation}
-
-\subsection{Model configuration}
-\begin{table}[H]
-\centering
-\caption{Models and main configurations used in the experiment.}
-\label{tab:model-config}
-\begin{tabularx}{0.96\textwidth}{@{}L{4.7cm}Y@{}}
-\toprule
-\textbf{Model} & \textbf{Main configuration / parameters} \\
-\midrule
-Gaussian Naive Bayes & Replace with relevant settings or ``default'' \\
-Online Logistic Regression & Replace with optimizer / learning-rate settings \\
-Hoeffding Tree & Replace with grace period, delta, tau, leaf prediction, etc. \\
-Online Bagging & Replace with base learner, number of models, seed, etc. \\
-Adaptive Random Forest & Replace with number of models and other relevant settings \\
-Optional model (if used) & Replace or delete this row \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Evaluation protocol}
-\begin{keybox}[title=Mandatory streaming order]
-\centering\Large\textbf{PREDICT $\rightarrow$ EVALUATE $\rightarrow$ LEARN}
-\end{keybox}
-
-\instruction{State explicitly that each prediction was evaluated before the current label was learned. Report Accuracy, Macro-F1, Precision, Recall and the confusion matrix, together with prediction and update cost per event. Explain which class is treated as the positive event class.}
-
-
-% =============================================================================
-\section{Results and Discussion}
-% =============================================================================
-\instruction{Present only the evidence needed to answer the assignment. Interpret results rather than ranking models. Discuss class imbalance, event detection, differences between Representation A and Representation B, model behaviour over time, and computational cost. Connect model evidence back to the stream characteristics identified earlier. At least two analyses or visualisations in the complete report must be original group-designed analyses rather than direct reproductions of the starter-code figures. Suggested length: one to one-and-a-half pages.}
-
-\subsection{Predictive performance - City A}
-\begin{table}[H]
-\centering
-\caption{Final predictive results for \CityA. Report the same evaluation period for every model.}
-\label{tab:city-a-results}
-\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
-\toprule
-\textbf{Model} & \textbf{Acc.} & \textbf{Macro-F1} & \textbf{Prec.} & \textbf{Recall} \\
-\midrule
-GaussianNB & -- & -- & -- & -- \\
-Online Logistic & -- & -- & -- & -- \\
-Hoeffding Tree & -- & -- & -- & -- \\
-Online Bagging & -- & -- & -- & -- \\
-Adaptive Random Forest & -- & -- & -- & -- \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Predictive performance - City B}
-\begin{table}[H]
-\centering
-\caption{Final predictive results for \CityB. Report the same evaluation period for every model.}
-\label{tab:city-b-results}
-\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
-\toprule
-\textbf{Model} & \textbf{Acc.} & \textbf{Macro-F1} & \textbf{Prec.} & \textbf{Recall} \\
-\midrule
-GaussianNB & -- & -- & -- & -- \\
-Online Logistic & -- & -- & -- & -- \\
-Hoeffding Tree & -- & -- & -- & -- \\
-Online Bagging & -- & -- & -- & -- \\
-Adaptive Random Forest & -- & -- & -- & -- \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Computational evidence}
-\begin{table}[H]
-\centering
-\caption{Prediction and update cost per event. Report values measured within the same run and environment.}
-\label{tab:cost-results}
-\begin{tabularx}{0.98\textwidth}{@{}Y C{2.0cm} C{2.0cm} C{2.0cm} C{2.0cm}@{}}
-\toprule
-& \multicolumn{2}{c}{\textbf{\CityA}} & \multicolumn{2}{c}{\textbf{\CityB}} \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}
-\textbf{Model} & \textbf{Pred. ms/event} & \textbf{Update ms/event} & \textbf{Pred. ms/event} & \textbf{Update ms/event} \\
-\midrule
-GaussianNB & -- & -- & -- & -- \\
-Online Logistic & -- & -- & -- & -- \\
-Hoeffding Tree & -- & -- & -- & -- \\
-Online Bagging & -- & -- & -- & -- \\
-Adaptive Random Forest & -- & -- & -- & -- \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\reportfigure{figures/model_evidence.png}{Selected model evidence supporting the discussion. Do not use a generic caption such as ``model results''.}{fig:model-evidence}
-
-\instruction{After the tables/figures, explain the relationships you observed. Examples of useful questions: Did higher Accuracy coincide with higher Recall? Did temporal features improve event detection? Did an ensemble provide a meaningful gain relative to its computational cost? Did one city's class distribution make the task more difficult?}
-
-
-% =============================================================================
-\section{Business and Technical Recommendations}
-% =============================================================================
-\instruction{Provide two separate conclusions. The business recommendation must be supported by descriptive, temporal and operational evidence, not by whichever classifier achieved the highest score. The technical recommendation must be supported by predictive and computational evidence. State the scope of each recommendation carefully. Suggested length: about half a page.}
-
-\begin{businessbox}[title=Business Recommendation]
-% REPLACE THIS TEXT WITH YOUR GROUP'S RECOMMENDATION.
-From the weather-related operational perspective defined by \BusinessScenario, state which city appears more suitable, or explain why the available evidence does not support a clear preference. Cite the specific evidence that supports this conclusion.
-\end{businessbox}
-
-\begin{keybox}[title=Technical Recommendation]
-% REPLACE THIS TEXT WITH YOUR GROUP'S RECOMMENDATION.
-Recommend a streaming modelling approach for continuous prediction of \EventTarget. Explain the trade-off between event detection, overall predictive performance, computational cost, and practical complexity.
-\end{keybox}
-
-
-% =============================================================================
-\section{Limitations}
-% =============================================================================
-\instruction{Explain what the study cannot establish. Consider the limited set of weather variables, the selected historical period, the simplified binary event definition, external business factors not included in Open-Meteo, computational measurements being environment-specific, and any modelling assumptions. Do not introduce new results here.}
-
-% WRITE YOUR LIMITATIONS BELOW THIS LINE.
-
-
-% =============================================================================
-\section{AI Assistance Statement}
-% =============================================================================
-\instruction{This statement is mandatory. Adapt one of the formulations below truthfully. Delete the option that does not apply. Generative AI may assist with programming tasks, but it may not perform the interpretation of experimental results, discussion, business recommendation, technical recommendation, or evidence-based conclusions.}
-
-\begin{businessbox}[title=Option A - Generative AI was used for permitted assistance]
-\emph{Generative AI tools were used to assist with [replace with the permitted uses: e.g., Python debugging, plotting syntax, code organisation]. They were not used to interpret experimental results or produce the analysis, discussion, business recommendation, technical recommendation, or evidence-based conclusions.}
-\end{businessbox}
-
-\begin{businessbox}[title=Option B - No generative AI was used]
-\emph{No generative AI tools were used in the preparation of this assignment.}
-\end{businessbox}
-
-
-% =============================================================================
-% REFERENCES
-% =============================================================================
-\section*{References}
-\addcontentsline{toc}{section}{References}
-\instruction{Cite the data source, libraries, algorithms/methods, and any external references used. Add BibTeX entries to \texttt{references.bib} and cite them in the report with commands such as \texttt{\string\parencite\{key\}}. Remove references that are not cited.}
-
-\printbibliography[heading=none]
-
-
-% =============================================================================
-% OPTIONAL APPENDIX
-% =============================================================================
-\clearpage
-\appendix
-\section{Optional Appendix}
-\instruction{Use the appendix only for supporting material that is useful for auditability but not essential to the main argument: additional confusion matrices, parameter grids, supplementary plots, or compact implementation notes. The appendix does not compensate for missing interpretation in the main report. Delete this appendix if it is not needed.}
-
-
-% =============================================================================
-% DRAFT-ONLY SELF-CHECK - DISAPPEARS WHEN draftinstructionsfalse
-% =============================================================================
-\ifdraftinstructions
-\clearpage
-\section*{Template Self-Check Before Final Submission}
-\begin{instructionbox}[title=Turn off template mode only after every item below is satisfied]
-\begin{tabularx}{\textwidth}{@{}C{0.8cm}Y@{}}
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Metadata on the cover are correct: PA code, students, cities, scenario, target and period. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & The report uses chronological data and documents the warm-up. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & No current target-defining value or future observation is used as an input. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Thresholds derived from data use pooled warm-up information only and remain frozen during evaluation. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & City A and City B use compatible definitions and evaluation logic. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & The five mandatory models are evaluated with PREDICT $\rightarrow$ EVALUATE $\rightarrow$ LEARN. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Accuracy is interpreted together with Macro-F1, Precision, Recall and the confusion matrix. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & At least two analyses/visualisations are group-designed rather than direct starter-code reproductions. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Business and Technical Recommendations are separate and evidence-based. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Every figure/table included is discussed in the report and has a meaningful caption. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & The AI Assistance Statement is truthful and complete. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & The main body is approximately 6--8 pages after template guidance is hidden. \\
-\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & \texttt{\string\draftinstructionsfalse} is set before exporting the final PDF. \\
-\end{tabularx}
-\end{instructionbox}
-\fi
-
+	\pagenumbering{gobble}
+	
+	% COVER PAGE
+	\begin{titlepage}
+		\pagecolor{Navy}
+		\color{white}
+		\vspace*{1.25cm}
+		{\small\bfseries\color{Mint}\MakeUppercase{Data Stream Mining \;\textbullet\; NOVA IMS}}\\[0.85cm]
+		{\Huge\bfseries Practical Assignment I}\\[0.30cm]
+		{\fontsize{25}{29}\selectfont\bfseries Technical Report}\\[0.55cm]
+		{\Large\color{Mint}Business-Oriented Data Stream Mining}\\[1.05cm]
+		
+		\begin{tcolorbox}[colback=white!7!Navy,colframe=Mint,boxrule=0.8pt,arc=2mm,left=5mm,right=5mm,top=4mm,bottom=4mm]
+			\color{white}
+			\begin{tabularx}{\textwidth}{@{}L{4.3cm}Y@{}}
+				\textbf{Assignment code} & \AssignmentCode \\
+				\textbf{Business scenario} & \BusinessScenario \\
+				\textbf{Cities} & \CityA\ vs. \CityB \\
+				\textbf{Event target} & \EventTarget \\
+				\textbf{Historical period} & \HistoricalPeriod \\
+			\end{tabularx}
+		\end{tcolorbox}
+		
+		\vspace{0.75cm}
+		\begin{tabularx}{\textwidth}{@{}YY@{}}
+			\textbf{Student A} & \textbf{Student B} \\
+			\StudentA & \StudentB \\
+			\StudentAID & \StudentBID \\
+			Primary city: \CityA & Primary city: \CityB \\
+		\end{tabularx}
+		
+		\vfill
+		{\large\bfseries Submission date: \SubmissionDate}\\[0.15cm]
+		{\normalsize\color{white!75}Expected main-body length: 6--8 pages, excluding cover, references, and optional appendix.}
+		
+		\ifdraftinstructions
+		\vspace{0.55cm}
+		{\small\bfseries\color{Mint}TEMPLATE MODE - WRITING GUIDANCE IS CURRENTLY VISIBLE}
+		\fi
+		\vspace*{0.55cm}
+	\end{titlepage}
+	\nopagecolor
+	\color{BodyText}
+	\pagenumbering{arabic}
+	\setcounter{page}{1}
+	
+	\draftbanner
+	
+	\begin{keybox}[title=Formatting rule]
+		Do not modify the report structure, section order, margins, body font size, or page geometry. You may add subsections where useful, but keep the mandatory sections below. Delete unused optional figure placeholders rather than filling space unnecessarily.
+	\end{keybox}
+	
+	% =============================================================================
+	\section{Business Context and Objective}
+	% =============================================================================
+	\instruction{Briefly describe the assigned business problem and the operational decision to be supported. Identify the two cities and the event target. Explain why this event matters to the business. End the section with one concise objective or guiding question. Do not make the recommendation yet. Suggested length: about half a page.}
+	
+	The assigned business is an urban walking tour operator that operates in Lisboa and Porto. Weather conditions, such as rain, can cause a tour to be cancelled, postponed, or rescheduled. As a result, being able to predict these rain events is valuable. In this report, we define a ``rain event'' as the precipitation at time $t$ being greater than or equal to $0.1\mathrm{mm}$.
+	
+	An important point is that \CityA, for example, could have greater total precipitation than \CityB, or more rain events, but the occurrence of the events in \CityB\ may be more irregular and harder to predict. Hence, the question is not simply ``which city rains the most''. The objective of this study is therefore to determine which of the two cities, \CityA\ and \CityB, offers more predictable conditions for scheduling walking tours with fewer rain interruptions.
+	
+	% =============================================================================
+	\section{Data and Stream Construction}
+	% =============================================================================
+	\instruction{Describe the Open-Meteo data source, historical period, weather variables, sampling frequency, chronological ordering, warm-up, preprocessing, target construction, and any cleaning decisions. Explain how potential outliers were inspected. Remember: valid extreme weather observations are not automatically errors. State explicitly that future information was not used to construct current inputs. Suggested length: half to one page.}
+	
+	\subsection{Stream configuration}
+	The data collected for this assignment was gathered through the Open-Meteo Historical Weather API \parencite{openmeteo}. \autoref{tab:stream-config} shows the API endpoint used, the historical period of the data, sampling frequency, retrieved variables, warm-up rule, event target, threshold estimation method (in this case it's just an absolute rule), and random seed. Potential outliers were inspected but not removed from the dataset just because they were outliers.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Core stream and experimental configuration}
+		\label{tab:stream-config}
+		\begin{tabularx}{0.94\textwidth}{@{}L{5.2cm}Y@{}}
+			\toprule
+			\textbf{Item} & \textbf{Configuration used} \\
+			\midrule
+			Assignment code & \AssignmentCode \\
+			API Endpoint URL & \texttt{https://archive-api.open-meteo.com/v1/archive} \\
+			City A / City B & \CityA\ / \CityB \\
+			Historical period & \HistoricalPeriod \\
+			Sampling frequency & Hourly (1 observation per hour) \\
+			Variables retrieved & \texttt{temperature\_2m}, \texttt{relative\_humidity\_2m}, \texttt{precipitation}, \texttt{wind\_speed\_10m} \\
+			Warm-up rule & \WarmupRule \\
+			Event target & \EventTarget \\
+			Target definition / threshold & \TargetDefinition \\
+			Threshold estimation & Absolute rule \\
+			Random seed & \RandomSeed \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\subsection{Target and temporal alignment}
+	\instruction{Define the binary target mathematically or in precise pseudocode. Explain which observations are used as predictors at time $t$ and why the target-defining value at time $t$ is excluded from the inputs. If a threshold is data-driven, explain that it was estimated from the pooled warm-up only and then frozen.}
+	
+	As stated in \autoref{tab:stream-config}, the observations are hourly. Hence, observations at $t$ and $t+1$ are spaced one hour apart. For each time step $t$, we define the following observations:
+	
+	\begin{align}
+		T_t &\in \mathbb{R} && \text{as the air temperature at 2m above ground level, measured in } ^\circ\mathrm{C}, \\
+		H_t &\in [0,100] && \text{as the relative humidity at 2m above ground level, measured in } \%, \\
+		P_t &\in \mathbb{R}_{\geq 0} && \text{as the precipitation accumulated over the preceding hour, measured in mm}, \\
+		W_t &\in \mathbb{R}_{\geq 0} && \text{as the wind speed at 10m above ground level, measured in km/h}.
+	\end{align}
+	
+	The binary rain-event target, $y_t \in \{0, 1\}$, is defined as:
+	
+	\begin{equation}
+		\label{eq:rain-event}
+		y_t \;\coloneqq\; \begin{cases}
+			1 & \text{if} \;\; P_t \:\ge\: 0.1\mathrm{mm}, \\
+			0 & \text{if} \;\; P_t \:<\: 0.1\mathrm{mm}.
+		\end{cases}
+	\end{equation}
+	
+	To construct the feature vector for predicting $y_t$, we use observations from time $t-1$. This is because the prediction at time $t$ must only use information available before time $t$. Using observations from time $t$ to predict the target at time $t$ would cause temporal leakage. This can result in a deceptively high model performance because the model is using information that would not be available at prediction time.
+	
+	% =============================================================================
+	\section{City Analysis}
+	% =============================================================================
+	Before we analyse \CityA\ and \CityB, we will define some statistics. Let
+	
+	\begin{equation}
+		W^T_m \;\coloneqq\; \{ y_i : \tau_m \le \tau_i < \tau_{m+1} \},
+	\end{equation}
+	
+	be a tumbling window where $m$ represents a given month, $\tau_m$ is the timestamp at the start of month $m$, $\tau_{m+1}$ is the timestamp at the start of month $m+1$, and $\tau_i$ is the timestamp associated with observation $i$. Then, the percentage of observations where there is a rain event in month $m$ is given by:
+	
+	\begin{equation}
+		\label{eq:R_m}
+		R_m \;\coloneqq\; \frac{100}{\left\lvert W^T_m \right\rvert} \sum_{y_i \in W^T_m} y_i, \qquad R_m \in [0, 100].
+	\end{equation}
+	
+	Specifically, $R_m$ denotes the percentage of observations in a given month $m$ that were rain events. In addition, let
+	
+	\begin{equation}
+		W^{(24)}_{t-1} \;\coloneqq\; \{y_{t-24},\,y_{t-23},\,\dotsc,\,y_{t-1}\},
+	\end{equation}
+	
+	be a sliding window containing the past $24$ observations. Then, the number of rain-event hours in the past $24$ hours is given by:
+	
+	\begin{equation}
+		\label{eq:C_t^(24)}
+		C^{(24)}_t \;\coloneqq \sum_{y_i \in W^{(24)}_{t-1}} y_i, \qquad C^{(24)}_t \in \{0,\,1,\,\dotsc,\,24\}.
+	\end{equation}
+	
+	% =============================================================================
+	\subsection{City A Analysis: \CityA}
+	% =============================================================================
+	\instruction{This section is primarily the responsibility of Student A. Characterise the stream for City A before interpreting the models. Include data quality observations, descriptive statistics, target class distribution, temporal behaviour, rolling/window evidence, and at least one analysis that is relevant to the assigned business context. Explain what the evidence means; do not simply describe the shape of a chart. Suggested length: about one page.}
+	
+	\begin{table}[H]
+		\centering
+		\caption{Selected descriptive and event statistics for \CityA. Replace or extend the rows when justified.}
+		\label{tab:city-a-profile}
+		\begin{tabularx}{0.88\textwidth}{@{}L{6.0cm}C{3.2cm}Y@{}}
+			\toprule
+			\textbf{Indicator} & \textbf{Value} & \textbf{Why it matters} \\
+			\midrule
+			Number of observations & $52608$ & Size of analysed stream \\
+			Positive-event rate (\%) & $12.1\%$ & Frequency of rain-related interruption \\
+			Selected weather statistic & -- & -- \\
+			Selected rolling/window statistic & -- & -- \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\reportfigure{figures/Lisboa_monthly_rain_event_rate.pdf}{Plotting the monthly rain-event rate $R_m$ for \CityA\ from \HistoricalPeriod.}{fig:lisboa-monthly-rain-event-rate}
+	
+	\reportfigure{figures/Lisboa_distribution_of_rainy_hours.pdf}{Plotting the distribution of rainy hours in the past $24$ hours, $C^{(24)}_t$, for \CityA\ from \HistoricalPeriod. The $y$-axis is plotted on a log scale.}{fig:lisboa-distribution-of-rainy-hours}
+	
+	
+	% =============================================================================
+	\subsection{City B Analysis: \CityB}
+	% =============================================================================
+	\instruction{This section is primarily the responsibility of Student B. Use the same analytical logic applied to City A so that the subsequent comparison is fair. Characterise data quality, descriptive behaviour, target distribution, temporal behaviour, and rolling/window evidence. Explain the operational meaning of the evidence. Suggested length: about one page.}
+	
+	In the \CityB\ stream, there were no missing values, no duplicates, and each observation was exactly one hour after its preceding observation. Furthermore, the gathered weather variables $T_t,\,H_t,\,P_t$ and $W_t$ were all within their correct domains. As a result, no cleaning was necessary. The binary target distribution for $y_t \in \{0,1\}$, defined in \autoref{eq:rain-event}, is:
+	
+	\begin{align}
+		\Pr(y_t = 1) \;&\approx\; 0.204, \\
+		\Pr(y_t = 0) \;&\approx\; 0.796.
+	\end{align}
+	
+	This gives a positive-event rate of $20.4\%$, as shown in \autoref{tab:city-b-profile}. Equivalently, this means $20.4\%$ of the observations had at least $0.1\mathrm{mm}$ of precipitation. Interestingly, we have that $Q_{0.95} (P_t) = 0.9\mathrm{mm}$ and $\mathrm{std}(P_t) = 0.67\mathrm{mm}$, but $\max(P_t) = 21.5\mathrm{mm}$. This means that $95\%$ of observations had a precipitation of $0.9\mathrm{mm}$ or below, whilst the maximum indicates the presence of rare extreme precipitation values.
+	
+	The distribution of $H_t$ is negatively skewed, with a skewness of $-0.78$ and median of $81\%$. An interesting statistic is that among the observations classified as rain events,
+	
+	\begin{equation}
+		\Pr(H_t \geq 50\% \mid y_t = 1) \;\approx\; 0.999.
+	\end{equation}
+	
+	Thus, almost all rain events occurred when the relative humidity was at least $50\%$. The distribution of $T_t$ is relatively symmetric, with the mean and median being approximately equal to $15.5\,^\circ\mathrm{C}$, and the standard deviation being $4.8\,^\circ\mathrm{C}$. The distribution of $W_t$ is positively skewed, with a skewness of $0.86$ and median of $13\,\mathrm{km/h}$.
+	
+	\autoref{fig:porto-monthly-rain-event-rate} shows the monthly rain-event evolution by plotting $R_m$ (defined in \autoref{eq:R_m}) for all $m$. Intuitively, the rain-event rate tends to peak in winter, and dip in summer. \autoref{fig:porto-distribution-of-rainy-hours} shows the distribution of rainy hours within the 24-hour sliding window $C^{(24)}_t$.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Selected descriptive and event statistics for \CityB.}
+		\label{tab:city-b-profile}
+		\begin{tabularx}{0.88\textwidth}{@{}L{6.0cm}C{3.2cm}Y@{}}
+			\toprule
+			\textbf{Indicator} & \textbf{Value} & \textbf{Why it matters} \\
+			\midrule
+			Number of observations & $52608$ & Size of analysed stream \\
+			Positive-event rate (\%) & $20.4\%$ & Frequency of rain-related interruption \\
+			$Q_{0.95}(P_t)$ & $0.9\mathrm{mm}$ & Characterises upper-tail hourly precipitation \\
+			$Q_{0.90} \left(C^{(24)}_t \right)$ & 17 & Characterises upper-tail concentration of rain events within a 24-hour sliding window \\
+			$\mathrm{median} \left(C^{(24)}_t \right)$ & $0$ & Characterises the typical amount of rain events within a 24-hour sliding window \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\reportfigure{figures/Porto_monthly_rain_event_rate.pdf}{Plotting the monthly rain-event rate $R_m$ for \CityB\ from \HistoricalPeriod.}{fig:porto-monthly-rain-event-rate}
+	
+	\reportfigure{figures/Porto_distribution_of_rainy_hours.pdf}{Plotting the distribution of rainy hours in the past $24$ hours, $C^{(24)}_t$, for \CityB\ from \HistoricalPeriod. The $y$-axis is plotted on a log scale.}{fig:porto-distribution-of-rainy-hours}
+	
+	
+	% =============================================================================
+	\section{Comparative Data Analysis}
+	% =============================================================================
+	\instruction{Compare the two cities before discussing classifier scores. Focus on differences that matter to the assigned business question: event frequency, variability, persistence, temporal patterns, operational thresholds, or other justified indicators. The comparison must use compatible definitions for both cities. This section is joint work. Suggested length: about one page.}
+	
+	\begin{table}[H]
+		\centering
+		\caption{Business-relevant comparison before modelling. Choose indicators that are meaningful for your assignment.}
+		\label{tab:business-comparison}
+		\begin{tabularx}{0.92\textwidth}{@{}Y C{3.0cm} C{3.0cm}@{}}
+			\toprule
+			\textbf{Indicator} & \textbf{\CityA} & \textbf{\CityB} \\
+			\midrule
+			Positive-event rate (\%) & $12.1$ & $20.4$ \\
+			Selected variability / persistence measure & -- & -- \\
+			Selected business-relevant statistic & -- & -- \\
+			Additional group-designed indicator & -- & -- \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\reportfigure{figures/city_comparison.png}{Comparative evidence for \CityA\ and \CityB. Replace the caption with the specific analytical message.}{fig:city-comparison}
+	
+	
+	% =============================================================================
+	\section{Data Stream Mining Experiment}
+	% =============================================================================
+	\instruction{Describe the two required feature representations, the five mandatory learners, any optional model used, model parameters, the prequential protocol, and the evaluation metrics. Explain how the same chronological history was preserved within each city. If you investigate one model parameter, state the values compared and the criterion used to interpret the trade-off. Suggested length: one to one-and-a-half pages.}
+	
+	\subsection{Feature representations}
+	\begin{businessbox}[title=Representation A - Previous-state features]
+		At minimum, use lagged weather information such as temperature$(t-1)$, humidity$(t-1)$, precipitation$(t-1)$ and wind$(t-1)$. Adapt the exact set to the available variables while preserving the no-future-information rule.
+	\end{businessbox}
+	
+	For Representation A, we define the feature vector $X^A_t$ using the lagged weather variables for temperature, humidity, precipitation, and wind:
+	
+	\begin{equation}
+		X_t^A \;\coloneqq\; \left(T_{t-1},\,H_{t-1},\,P_{t-1},\,W_{t-1}\right).
+	\end{equation}
+	
+	\begin{businessbox}[title=Representation B - Temporal stream context]
+		Extend Representation A with justified recent context, for example rolling means, rolling standard deviations, recent deltas, or recent event frequency. All windowed features must use observations strictly before the prediction time.
+	\end{businessbox}
+	
+	For Representation B, we need to first define some features. Let
+	
+	\begin{align}
+		\Delta P_t &\;\coloneqq\; P_{t-1} \:-\: P_{t-2}, \\
+		\Delta H_t &\;\coloneqq\; H_{t-1} \:-\: H_{t-2},
+	\end{align}
+	
+	be the delta features for $P_t$ and $H_t$ respectively. Next, let
+	
+	\begin{align}
+		\bar{P}_t^{(6)} &\;\coloneqq\; \frac{1}{6} \sum_{i=1}^{6} P_{t-i}, \\
+		\bar{H}_t^{(6)} &\;\coloneqq\; \frac{1}{6} \sum_{i=1}^{6} H_{t-i},
+	\end{align}
+	
+	be the rolling means for $P_t$ and $H_t$ in a 6-hour sliding window. Then, we define the rolling 6-hour standard deviation for $P_t$ and $H_t$ as:
+	
+	\begin{align}
+		\tilde{P}_t^{(6)} &\;\coloneqq\; \sqrt{\frac{1}{5} \sum_{i=1}^{6} \left(P_{t-i} \:-\: \bar{P}_t^{(6)}\right)^2}, \\
+		\tilde{H}_t^{(6)} &\;\coloneqq\; \sqrt{\frac{1}{5} \sum_{i=1}^{6} \left(H_{t-i} \:-\: \bar{H}_t^{(6)}\right)^2}.
+	\end{align}
+	
+	In addition to these new features, we also use the amount of rain events within a 24-hour sliding window, $C_t^{(24)}$ (defined in \autoref{eq:C_t^(24)}), and $X_t^A$, to construct the feature vector for Representation B:
+	
+	\begin{equation}
+		X_t^B \;\coloneqq\; \left(X_{t}^A,\, \Delta P_t,\, \Delta H_t,\, \bar{P}_t^{(6)},\, \bar{H}_t^{(6)},\, \tilde{P}_t^{(6)},\, \tilde{H}_t^{(6)},\, C^{(24)}_{t}\right).
+	\end{equation}
+	
+	\subsection{Model configuration}
+	\begin{table}[H]
+		\centering
+		\caption{Models and main configurations used in the experiment.}
+		\label{tab:model-config}
+		\begin{tabularx}{0.96\textwidth}{@{}L{4.7cm}Y@{}}
+			\toprule
+			\textbf{Model} & \textbf{Main configuration / parameters} \\
+			\midrule
+			Gaussian Naive Bayes & Replace with relevant settings or ``default'' \\
+			Online Logistic Regression & Replace with optimizer / learning-rate settings \\
+			Hoeffding Tree & Replace with grace period, delta, tau, leaf prediction, etc. \\
+			Online Bagging & Replace with base learner, number of models, seed, etc. \\
+			Adaptive Random Forest & Replace with number of models and other relevant settings \\
+			Optional model (if used) & Replace or delete this row \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\subsection{Evaluation protocol}
+	\begin{keybox}[title=Mandatory streaming order]
+		\centering\Large\textbf{PREDICT $\rightarrow$ EVALUATE $\rightarrow$ LEARN}
+	\end{keybox}
+	
+	\instruction{State explicitly that each prediction was evaluated before the current label was learned. Report Accuracy, Macro-F1, Precision, Recall and the confusion matrix, together with prediction and update cost per event. Explain which class is treated as the positive event class.}
+	
+	
+	% =============================================================================
+	\section{Results and Discussion}
+	% =============================================================================
+	\instruction{Present only the evidence needed to answer the assignment. Interpret results rather than ranking models. Discuss class imbalance, event detection, differences between Representation A and Representation B, model behaviour over time, and computational cost. Connect model evidence back to the stream characteristics identified earlier. At least two analyses or visualisations in the complete report must be original group-designed analyses rather than direct reproductions of the starter-code figures. Suggested length: one to one-and-a-half pages.}
+	
+	\subsection{Predictive performance - City A}
+	\begin{table}[H]
+		\centering
+		\caption{Final predictive results for \CityA. Report the same evaluation period for every model.}
+		\label{tab:city-a-results}
+		\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
+			\toprule
+			\textbf{Model} & \textbf{Acc.} & \textbf{Macro-F1} & \textbf{Prec.} & \textbf{Recall} \\
+			\midrule
+			GaussianNB & -- & -- & -- & -- \\
+			Online Logistic & -- & -- & -- & -- \\
+			Hoeffding Tree & -- & -- & -- & -- \\
+			Online Bagging & -- & -- & -- & -- \\
+			Adaptive Random Forest & -- & -- & -- & -- \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\subsection{Predictive performance - City B}
+	\begin{table}[H]
+		\centering
+		\caption{Final predictive results for \CityB. Report the same evaluation period for every model.}
+		\label{tab:city-b-results}
+		\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
+			\toprule
+			\textbf{Model} & \textbf{Acc.} & \textbf{Macro-F1} & \textbf{Prec.} & \textbf{Recall} \\
+			\midrule
+			GaussianNB & -- & -- & -- & -- \\
+			Online Logistic & -- & -- & -- & -- \\
+			Hoeffding Tree & -- & -- & -- & -- \\
+			Online Bagging & -- & -- & -- & -- \\
+			Adaptive Random Forest & -- & -- & -- & -- \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\subsection{Computational evidence}
+	\begin{table}[H]
+		\centering
+		\caption{Prediction and update cost per event. Report values measured within the same run and environment.}
+		\label{tab:cost-results}
+		\begin{tabularx}{0.98\textwidth}{@{}Y C{2.0cm} C{2.0cm} C{2.0cm} C{2.0cm}@{}}
+			\toprule
+			& \multicolumn{2}{c}{\textbf{\CityA}} & \multicolumn{2}{c}{\textbf{\CityB}} \\
+			\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+			\textbf{Model} & \textbf{Pred. ms/event} & \textbf{Update ms/event} & \textbf{Pred. ms/event} & \textbf{Update ms/event} \\
+			\midrule
+			GaussianNB & -- & -- & -- & -- \\
+			Online Logistic & -- & -- & -- & -- \\
+			Hoeffding Tree & -- & -- & -- & -- \\
+			Online Bagging & -- & -- & -- & -- \\
+			Adaptive Random Forest & -- & -- & -- & -- \\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\reportfigure{figures/model_evidence.png}{Selected model evidence supporting the discussion. Do not use a generic caption such as ``model results''.}{fig:model-evidence}
+	
+	\instruction{After the tables/figures, explain the relationships you observed. Examples of useful questions: Did higher Accuracy coincide with higher Recall? Did temporal features improve event detection? Did an ensemble provide a meaningful gain relative to its computational cost? Did one city's class distribution make the task more difficult?}
+	
+	
+	% =============================================================================
+	\section{Business and Technical Recommendations}
+	% =============================================================================
+	\instruction{Provide two separate conclusions. The business recommendation must be supported by descriptive, temporal and operational evidence, not by whichever classifier achieved the highest score. The technical recommendation must be supported by predictive and computational evidence. State the scope of each recommendation carefully. Suggested length: about half a page.}
+	
+	\begin{businessbox}[title=Business Recommendation]
+		% REPLACE THIS TEXT WITH YOUR GROUP'S RECOMMENDATION.
+		From the weather-related operational perspective defined by \BusinessScenario, state which city appears more suitable, or explain why the available evidence does not support a clear preference. Cite the specific evidence that supports this conclusion.
+	\end{businessbox}
+	
+	\begin{keybox}[title=Technical Recommendation]
+		% REPLACE THIS TEXT WITH YOUR GROUP'S RECOMMENDATION.
+		Recommend a streaming modelling approach for continuous prediction of \EventTarget. Explain the trade-off between event detection, overall predictive performance, computational cost, and practical complexity.
+	\end{keybox}
+	
+	
+	% =============================================================================
+	\section{Limitations}
+	% =============================================================================
+	\instruction{Explain what the study cannot establish. Consider the limited set of weather variables, the selected historical period, the simplified binary event definition, external business factors not included in Open-Meteo, computational measurements being environment-specific, and any modelling assumptions. Do not introduce new results here.}
+	
+	% WRITE YOUR LIMITATIONS BELOW THIS LINE.
+	
+	
+	% =============================================================================
+	\section{AI Assistance Statement}
+	% =============================================================================
+	\instruction{This statement is mandatory. Adapt one of the formulations below truthfully. Delete the option that does not apply. Generative AI may assist with programming tasks, but it may not perform the interpretation of experimental results, discussion, business recommendation, technical recommendation, or evidence-based conclusions.}
+	
+	\begin{businessbox}[title=Option A - Generative AI was used for permitted assistance]
+		\emph{Generative AI tools were used to assist with [replace with the permitted uses: e.g., Python debugging, plotting syntax, code organisation]. They were not used to interpret experimental results or produce the analysis, discussion, business recommendation, technical recommendation, or evidence-based conclusions.}
+	\end{businessbox}
+	
+	\begin{businessbox}[title=Option B - No generative AI was used]
+		\emph{No generative AI tools were used in the preparation of this assignment.}
+	\end{businessbox}
+	
+	
+	% =============================================================================
+	% REFERENCES
+	% =============================================================================
+	\section*{References}
+	\addcontentsline{toc}{section}{References}
+	\instruction{Cite the data source, libraries, algorithms/methods, and any external references used. Add BibTeX entries to \texttt{references.bib} and cite them in the report with commands such as \texttt{\string\parencite\{key\}}. Remove references that are not cited.}
+	
+	\printbibliography[heading=none]
+	
+	
+	% =============================================================================
+	% OPTIONAL APPENDIX
+	% =============================================================================
+	\clearpage
+	\appendix
+	\section{Optional Appendix}
+	\instruction{Use the appendix only for supporting material that is useful for auditability but not essential to the main argument: additional confusion matrices, parameter grids, supplementary plots, or compact implementation notes. The appendix does not compensate for missing interpretation in the main report. Delete this appendix if it is not needed.}
+	
+	
+	% =============================================================================
+	% DRAFT-ONLY SELF-CHECK - DISAPPEARS WHEN draftinstructionsfalse
+	% =============================================================================
+	\ifdraftinstructions
+	\clearpage
+	\section*{Template Self-Check Before Final Submission}
+	\begin{instructionbox}[title=Turn off template mode only after every item below is satisfied]
+		\begin{tabularx}{\textwidth}{@{}C{0.8cm}Y@{}}
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Metadata on the cover are correct: PA code, students, cities, scenario, target and period. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & The report uses chronological data and documents the warm-up. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & No current target-defining value or future observation is used as an input. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Thresholds derived from data use pooled warm-up information only and remain frozen during evaluation. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & City A and City B use compatible definitions and evaluation logic. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & The five mandatory models are evaluated with PREDICT $\rightarrow$ EVALUATE $\rightarrow$ LEARN. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Accuracy is interpreted together with Macro-F1, Precision, Recall and the confusion matrix. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & At least two analyses/visualisations are group-designed rather than direct starter-code reproductions. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Business and Technical Recommendations are separate and evidence-based. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & Every figure/table included is discussed in the report and has a meaningful caption. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & The AI Assistance Statement is truthful and complete. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & The main body is approximately 6--8 pages after template guidance is hidden. \\
+			\fbox{\rule{0pt}{1.0ex}\rule{1.0ex}{0pt}} & \texttt{\string\draftinstructionsfalse} is set before exporting the final PDF. \\
+		\end{tabularx}
+	\end{instructionbox}
+	\fi
+	
 \end{document}
