@@ -7,3 +7,12 @@ __pycache__/
 results/
 temp/
 .vscode
+*.aux
+*.bcf
+*.fdb_latexmk
+*.fls
+*.log
+*.xml
+*.gz
+*.pdf
+objective.md

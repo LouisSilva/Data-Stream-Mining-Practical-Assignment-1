@@ -111,9 +111,9 @@ def plot_C_24(config: dict, df: pd.DataFrame, city: str) -> None:
     
     fig, ax = plt.subplots(1, 1)
     ax.bar(counts.index, counts.values, width=0.8, facecolor="#21A58B")
-    
+        
     # Labels
-    ax.set_title("Porto - distribution of rainy hours in the previous 24 hours")
+    ax.set_title(f"{city} - distribution of rainy hours in the previous 24 hours")
     ax.set_xlabel("Rain-event hours in preceding 24 hours")
     ax.set_ylabel("Number of observations")
     
@@ -126,7 +126,8 @@ def plot_C_24(config: dict, df: pd.DataFrame, city: str) -> None:
     #     textcoords="offset points",
     #     ha="center",
     #     va="bottom",
-    # )
+    # )    return irregular
+
     
     # Horizontal grid
     ax.grid(axis="y", which="major", alpha=0.25)
