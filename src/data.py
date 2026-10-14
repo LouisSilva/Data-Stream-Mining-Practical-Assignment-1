@@ -1,3 +1,5 @@
+import string
+import secrets
 import requests
 import json
 import pandas as pd
@@ -5,6 +7,12 @@ from pathlib import Path
 
 from .json_utils import fetch_json
 from .config import find_project_root
+
+
+def create_random_suffix(length=8) -> str:
+    alphabet = string.ascii_lowercase + string.digits
+    return ''.join(secrets.choice(alphabet) for _ in range(length))
+
 
 def download_data(city: str, config: dict) -> None:
     """
@@ -36,6 +44,7 @@ def download_data(city: str, config: dict) -> None:
     
     with open(file_path, "w", encoding="utf-8") as file:
         json.dump(open_meteo_json, file, indent=2)
+
 
 def load_data_from_json(city: str, config: dict) -> pd.DataFrame:
     """

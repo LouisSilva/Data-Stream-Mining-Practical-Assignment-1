@@ -1,15 +1,10 @@
 import os
-import string
-import secrets
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 from .config import find_project_root
-
-def create_random_suffix(length=8) -> str:
-    alphabet = string.ascii_lowercase + string.digits
-    return ''.join(secrets.choice(alphabet) for _ in range(length))
+from .data import create_random_suffix
 
 def set_plot_style(config: dict, aspect_ratio=0.618, dpi=200) -> None:
     inches_per_pt = 1 / 72.27

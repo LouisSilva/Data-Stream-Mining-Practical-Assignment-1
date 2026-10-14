@@ -31,6 +31,9 @@ cleaning:
     precipitation: {min: 0}
     wind_speed_10m: {min: 0}
 
+preprocessing:
+  features: ["precipitation_delta", "relative_humidity_2m_delta", "precipitation_mean6", "relative_humidity_2m_mean6", "precipitation_std6", "relative_humidity_2m_std6", "rainy_hours24"]
+
 models:
   gaussian_naive_bayes:
     params: {}
@@ -53,12 +56,12 @@ models:
     
   online_bagging:
     params:
-      random_seed: 42
-      ensemble_size: 5
+      seed: 42
+      n_models: 5
     
   adaptive_random_forest:
     params:
-      random_seed: 42
+      seed: 42
       n_models: 5
       max_features: "sqrt"
       lambda_value: 6

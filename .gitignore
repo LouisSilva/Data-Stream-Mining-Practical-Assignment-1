@@ -7,6 +7,11 @@ __pycache__/
 results/
 temp/
 .vscode
+
+# Report stuff
 report/*
 !report/main.tex
+!report/figures/*
+!report/references.bib
+
 objective.md
