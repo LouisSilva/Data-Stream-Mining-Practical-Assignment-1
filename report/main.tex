@@ -342,26 +342,33 @@
 	\subsection{City A Analysis: \CityA}
 	% =============================================================================
 	\instruction{This section is primarily the responsibility of Student A. Characterise the stream for City A before interpreting the models. Include data quality observations, descriptive statistics, target class distribution, temporal behaviour, rolling/window evidence, and at least one analysis that is relevant to the assigned business context. Explain what the evidence means; do not simply describe the shape of a chart. Suggested length: about one page.}
+
+	The \CityA\ stream contains $52{,}608$ hourly observations from 1 January 2020 to 31 December 2025. The notebook checks found no missing values or duplicated rows, no duplicated timestamps, and no non-hourly transitions. With the target defined in \autoref{eq:rain-event}, $6{,}348$ observations ($12.1\%$) are rain events and $46{,}260$ ($87.9\%$) are non-events.
 	
 	\begin{table}[H]
 		\centering
-		\caption{Selected descriptive and event statistics for \CityA. Replace or extend the rows when justified.}
+		\caption{Selected descriptive, event, and temporal statistics for \CityA.}
 		\label{tab:city-a-profile}
 		\begin{tabularx}{0.88\textwidth}{@{}L{6.0cm}C{3.2cm}Y@{}}
 			\toprule
 			\textbf{Indicator} & \textbf{Value} & \textbf{Why it matters} \\
 			\midrule
-			Number of observations & $52608$ & Size of analysed stream \\
-			Positive-event rate (\%) & $12.1\%$ & Frequency of rain-related interruption \\
-			Selected weather statistic & -- & -- \\
-			Selected rolling/window statistic & -- & -- \\
+			Number of observations & $52{,}608$ & Size of the hourly stream \\
+			Positive-event rate (\%) & $12.1\%$ & Frequency of observations meeting the rain-event definition \\
+			$Q_{0.95}(P_t)$ & $0.3\mathrm{mm}$ & Upper-tail hourly precipitation statistic \\
+			$\Pr(H_t \geq 50\% \mid y_t=1)$ & $99.8\%$ & Humidity level among rain-event observations \\
+			Median $C^{(24)}_t$ & $0$ hours & Median number of rain-event hours in the preceding 24 observations \\
+			$Q_{0.90}(C^{(24)}_t)$ & $10$ hours & Upper-tail count of rain-event hours in the preceding 24 observations \\
+			Annual event-rate range & $9.5\%$--$15.6\%$ & Observed variation across calendar years (2023--2025) \\
 			\bottomrule
 		\end{tabularx}
 	\end{table}
+
+	The observed annual rain-event rates ranged from $9.53\%$ in 2023 to $15.57\%$ in 2025. By season, the event rate was lowest in summer in each year, ranging from $1.90\%$ to $4.89\%$. The peak hourly event rate occurred at 14:00 in five of the six years, and at 13:00 in 2022. Among rain-event observations, $99.8\%$ had relative humidity of at least $50\%$. For the preceding-24-hour count, $C^{(24)}_t$, the median was $0$ and the 90th percentile was $10$. Rain-event episodes had a median duration of 2 hours, a 90th-percentile duration of 8 hours, and a maximum duration of 36 hours.
 	
-	\reportfigure{figures/Lisboa_monthly_rain_event_rate.pdf}{Plotting the monthly rain-event rate $R_m$ for \CityA\ from \HistoricalPeriod.}{fig:lisboa-monthly-rain-event-rate}
+	\reportfigure{figures/Lisboa_monthly_rain_event_rate.pdf}{Monthly percentage of observations classified as rain events in \CityA\ from \HistoricalPeriod.}{fig:lisboa-monthly-rain-event-rate}
 	
-	\reportfigure{figures/Lisboa_distribution_of_rainy_hours.pdf}{Plotting the distribution of rainy hours in the past $24$ hours, $C^{(24)}_t$, for \CityA\ from \HistoricalPeriod. The $y$-axis is plotted on a log scale.}{fig:lisboa-distribution-of-rainy-hours}
+	\reportfigure{figures/Lisboa_distribution_of_rainy_hours.pdf}{Distribution of rain-event hours in the preceding 24 observations, $C^{(24)}_t$, for \CityA. The vertical axis uses a logarithmic scale.}{fig:lisboa-distribution-of-rainy-hours}
 	
 	
 	% =============================================================================

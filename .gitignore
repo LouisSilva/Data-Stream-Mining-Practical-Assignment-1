@@ -7,14 +7,6 @@ __pycache__/
 results/
 temp/
 .vscode
-*.aux
-*.bcf
-*.fdb_latexmk
-*.fls
-*.log
-*.xml
-*.gz
-*.pdf
-*.bbl
-*.blg
+report/*
+!report/main.tex
 objective.md
