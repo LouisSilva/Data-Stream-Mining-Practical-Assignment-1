@@ -70,3 +70,6 @@ models:
       tau: 0.10
       leaf_prediction: "mc"
       
+evaluation:
+  warmup_fraction: 0.25
+  

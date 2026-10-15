@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 
-def clean_dataset(df: pd.DataFrame, cleaning_config: dict) -> pd.DataFrame:
+
+def clean_dataset(cleaning_config: dict, df: pd.DataFrame) -> pd.DataFrame:
     """Applies the cleaning rules in `cleaning_config`"""
     out = df.copy()
 

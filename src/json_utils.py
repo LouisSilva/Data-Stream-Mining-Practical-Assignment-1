@@ -1,6 +1,7 @@
 import json
 import requests
 
+
 def fetch_json(url, params=None, headers=None, timeout=30):
     """Fetch JSON from an HTTP endpoint and return (data, response).
 
@@ -23,7 +24,8 @@ def fetch_json(url, params=None, headers=None, timeout=30):
 
     return response.json(), response
 
-def inspect_json(obj, name="root", max_items=5):
+
+def inspect_json(obj: dict | list, name="root", max_items=5) -> None:
     """Small helper for inspecting an unfamiliar JSON object."""
     print(f"{name}: {type(obj).__name__}")
 

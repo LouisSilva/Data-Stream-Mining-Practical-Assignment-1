@@ -33,6 +33,10 @@ def _div(numerator: int, denominator: int) -> float:
     return numerator / denominator if denominator else 0.0
 
 
+
+# TODO: add dataclass for storing the [TP, TN, FP, FN] list, and use that instead of the `recent_counts`
+
+
 class BinaryMetrics:
     """Incremental confusion matrix for y=1 (rain) and y=0 (no rain)."""
 
@@ -167,25 +171,26 @@ def evaluate_model(
         label = int(label)
 
         if i < warmup_rows:
+            # Give every model the same initial history
             model.learn_one(x, label)
             continue
 
-        # PREDICT: the model does not know this hour's label yet.
-        t0 = perf_counter_ns()
+        # Predict using only the information available before hour 1
+        before = perf_counter_ns()
         pred = model.predict_one(x)
-        prediction_ns += perf_counter_ns() - t0
+        prediction_ns += perf_counter_ns() - before
         
         if pred is None or pred not in (0, 1, False, True):
             raise RuntimeError(f"Model did not return a binary prediction at {timestamp}: {pred!r}")
         pred = int(pred)
 
-        # EVALUATE before any use of the current label for training.
+        # Evaluate the prediction before exposing this label to the model
         evaluator.update(label, pred)
 
-        # LEARN: current label is now allowed to affect future predictions.
-        t0 = perf_counter_ns()
+        # Update the model with the true label
+        before = perf_counter_ns()
         model.learn_one(x, label)
-        update_ns += perf_counter_ns() - t0
+        update_ns += perf_counter_ns() - before
 
         last_timestamp = timestamp
         n_scored = evaluator.tp + evaluator.tn + evaluator.fp + evaluator.fn
@@ -230,19 +235,19 @@ def run_experiments(
 
     common_ts = None
     common_warmup_rows = None
-    for city, data in city_streams.items():
-        if not all(k in data for k in ("timestamp", "X_A", "X_B", "y")):
+    for city, stream in city_streams.items():
+        if not all(k in stream for k in ("timestamp", "X_A", "X_B", "y")):
             raise ValueError(f"{city}: expected timestamp, X_A, X_B, and y")
             
-        ts = _validate_inputs(data["X_A"], data["y"], data["timestamp"])
-        _validate_inputs(data["X_B"], data["y"], data["timestamp"])
+        ts = _validate_inputs(stream["X_A"], stream["y"], stream["timestamp"])
+        _validate_inputs(stream["X_B"], stream["y"], stream["timestamp"])
         
-        if not set(data["X_B"].columns).issubset(data["X_B"].columns):
+        if not set(stream["X_B"].columns).issubset(stream["X_B"].columns):
             raise ValueError(f"{city}: Representation B must contain A")
             
         pd.testing.assert_frame_equal(
-            data["X_B"].reset_index(drop=True),
-            data["X_B"][list(data["X_B"].columns)].reset_index(drop=True),
+            stream["X_B"].reset_index(drop=True),
+            stream["X_B"][list(stream["X_B"].columns)].reset_index(drop=True),
             check_dtype=False,
         )
         
@@ -259,32 +264,34 @@ def run_experiments(
             
         common_warmup_rows = n_warmup
 
-    rows, histories = [], []
-    for city, data in city_streams.items():
-        for rep in ("X_A", "X_B"):
-            X = data[rep]
-            for name in MODEL_NAMES:
-                model = build_model(model_config, selected_model=name)
+    summaries, histories = [], []
+    for city, stream in city_streams.items():
+        for representation in ("X_A", "X_B"):
+            X = stream[representation]
+
+            for model_name in MODEL_NAMES:
+                model = build_model(model_config, selected_model=model_name)
+
                 summary, history = evaluate_model(
-                    model, X, data["y"], data["timestamp"],
+                    model, X, stream["y"], stream["timestamp"],
                     warmup_rows=common_warmup_rows,
                     recent_window=recent_window,
                     checkpoint_every=checkpoint_every,
                 )
                 
-                rows.append({"city": city, "representation": rep,
-                             "model": name, **summary})
+                summaries.append({"city": city, "representation": representation,
+                             "model": model_name, **summary})
                 history.insert(0, "city", city)
-                history.insert(1, "representation", rep)
-                history.insert(2, "model", name)
+                history.insert(1, "representation", representation)
+                history.insert(2, "model", model_name)
                 histories.append(history)
                 
-                print(f"{city:7} {rep} {name:21} "
+                print(f"{city:7} {representation} {model_name:21} "
                       f"Acc={summary['accuracy']:.3f} "
                       f"MacroF1={summary['macro_f1']:.3f} "
                       f"RainRecall={summary['recall_event']:.3f}")
 
-    return pd.DataFrame(rows), pd.concat(histories, ignore_index=True)
+    return pd.DataFrame(summaries), pd.concat(histories, ignore_index=True)
 
 
 def save_results(
@@ -298,12 +305,12 @@ def save_results(
     checkpoint_every: int = 1000
 ) -> None:
     """Save tables and explicit hyperparameters for the report."""
-    output = Path(out_dir)
-    output.mkdir(parents=True, exist_ok=True)
+    output_path = Path(out_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
 
     random_suffix = create_random_suffix()
-    summary.to_csv(output / f"metrics_{random_suffix}.csv", index=False)
-    history.to_csv(output / f"metric_history_{random_suffix}.csv", index=False)
+    summary.to_csv(output_path / f"metrics_{random_suffix}.csv", index=False)
+    history.to_csv(output_path / f"metric_history_{random_suffix}.csv", index=False)
 
     configuration = {
         "warmup_fraction": warmup_fraction,
@@ -314,4 +321,4 @@ def save_results(
         "river_version": version("river"),
         "pandas_version": pd.__version__,
     }
-    (output / "config.json").write_text(json.dumps(configuration, indent=2), encoding="utf-8")
+    (output_path / "config.json").write_text(json.dumps(configuration, indent=2), encoding="utf-8")

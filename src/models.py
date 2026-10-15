@@ -4,7 +4,8 @@ The model parameters are passed to River constructors with **params.
 The Logistic Regression optimizer and Bagging's base tree must first be
 constructed as Python objects from their respective YAML settings.
 """
-from river import ensemble, forest, linear_model, naive_bayes, optim, preprocessing, tree
+from river import base, ensemble, forest, linear_model, naive_bayes, optim, preprocessing, tree
+
 
 _MODELS = {
     "gaussian_naive_bayes": naive_bayes.GaussianNB,
@@ -16,7 +17,8 @@ _MODELS = {
 
 MODEL_NAMES = tuple(_MODELS)
 
-def build_model(models_config: dict, selected_model: str):
+
+def build_model(models_config: dict, selected_model: str) -> base.Classifier:
     """Construct a new, untrained model with YAML-defined parameters."""
     if selected_model not in _MODELS:
         raise ValueError(f"Unknown model {selected_model!r}; expected one of {MODEL_NAMES}")
