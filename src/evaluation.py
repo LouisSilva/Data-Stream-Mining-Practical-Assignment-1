@@ -207,9 +207,11 @@ def evaluate_model(
         "prediction_ms_per_event": prediction_ns / n_scored / 1_000_000,
         "update_ms_per_event": update_ns / n_scored / 1_000_000,
     })
+
     if not history or history[-1]["n_evaluated"] != n_scored:
         history.append({"timestamp": last_timestamp, **evaluator.cumulative(),
                         **evaluator.window()})
+        
     return result, pd.DataFrame(history)
 
 
