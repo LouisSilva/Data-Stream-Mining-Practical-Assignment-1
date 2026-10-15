@@ -359,12 +359,17 @@
 			$\Pr(H_t \geq 50\% \mid y_t=1)$ & $99.8\%$ & Humidity level among rain-event observations \\
 			Median $C^{(24)}_t$ & $0$ hours & Median number of rain-event hours in the preceding 24 observations \\
 			$Q_{0.90}(C^{(24)}_t)$ & $10$ hours & Upper-tail count of rain-event hours in the preceding 24 observations \\
-			Annual event-rate range & $9.5\%$--$15.6\%$ & Observed variation across calendar years (2023--2025) \\
+			$Q_{0.95}(C^{(24)}_t)$ & $15$ hours & More extreme concentration of rain-event hours in the preceding 24 observations \\
+			$Q_{0.90}$ rain-episode duration & $8$ hours & Length of a long but relatively common continuous rain episode \\
+			Maximum rain-episode duration & $36$ hours & Longest observed uninterrupted run of rain-event hours \\
+			Annual event-rate range & $9.5\%$--$15.6\%$ & Observed variation across calendar years (2020--2025) \\
 			\bottomrule
 		\end{tabularx}
 	\end{table}
 
-	The observed annual rain-event rates ranged from $9.53\%$ in 2023 to $15.57\%$ in 2025. By season, the event rate was lowest in summer in each year, ranging from $1.90\%$ to $4.89\%$. The peak hourly event rate occurred at 14:00 in five of the six years, and at 13:00 in 2022. Among rain-event observations, $99.8\%$ had relative humidity of at least $50\%$. For the preceding-24-hour count, $C^{(24)}_t$, the median was $0$ and the 90th percentile was $10$. Rain-event episodes had a median duration of 2 hours, a 90th-percentile duration of 8 hours, and a maximum duration of 36 hours.
+	The observed annual rain-event rates ranged from $9.53\%$ in 2023 to $15.57\%$ in 2025. By season, the event rate was lowest in summer in each year, ranging from $1.90\%$ to $4.89\%$. The peak hourly event rate occurred at 14:00 in five of the six years, and at 13:00 in 2022; aggregated across all years, 14:00 had a $20.30\%$ event rate compared with the overall hourly rate of $12.07\%$. Thursday was the highest-risk weekday at $12.98\%$, only modestly above the overall rate, so hour-of-day variation is the clearer observed scheduling signal. These are historical associations, not guarantees about future weather.
+
+	Among rain-event observations, $99.8\%$ had relative humidity of at least $50\%$. For the preceding-24-hour count, $C^{(24)}_t$, the median was $0$, the 90th percentile was $10$, and the 95th percentile was $15$ (out of a possible maximum of 24). This indicates that the typical rolling window is event-free, while the upper tail includes substantial clustering of rain-event hours. Rain-event episodes had a median duration of 2 hours, a 90th-percentile duration of 8 hours, and a maximum duration of 36 hours, evidence that longer wet spells can pose sustained interruption risk even though they are not typical.
 	
 	\reportfigure{figures/Lisboa_monthly_rain_event_rate.pdf}{Monthly percentage of observations classified as rain events in \CityA\ from \HistoricalPeriod.}{fig:lisboa-monthly-rain-event-rate}
 	
