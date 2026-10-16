@@ -15,8 +15,6 @@ _MODELS = {
     "adaptive_random_forest": forest.ARFClassifier,
 }
 
-MODEL_NAMES = tuple(_MODELS)
-
 
 def build_model(models_config: dict, selected_model: str) -> base.Classifier:
     """Construct a new, untrained model with YAML-defined parameters."""

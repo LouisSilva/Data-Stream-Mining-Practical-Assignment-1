@@ -72,4 +72,7 @@ models:
       
 evaluation:
   warmup_fraction: 0.25
+  window_size: 200
+  checkpoint_every: 1000
+  write_history_to_csv: false
   
