@@ -77,8 +77,8 @@ class ConfusionMatrix:
             "n_evaluated": self.total,
             "accuracy": divide(self.tp + self.tn, self.total),
             "macro_f1": (positive_f1 + negative_f1) / 2,
-            "target_precision": divide(self.tp, self.tp + self.fp),
-            "target_recall": divide(self.tp, self.tp + self.fn),
+            "precision": divide(self.tp, self.tp + self.fp),
+            "recall": divide(self.tp, self.tp + self.fn),
             "TP": self.tp,
             "TN": self.tn,
             "FP": self.fp,
@@ -373,7 +373,7 @@ def run_experiments(config: dict, city_streams: dict) -> tuple[pd.DataFrame, pd.
                 print(f'{city} / {representation} / {model_name}: '
                       f'Accuracy={summary["accuracy"]:.3f}, '
                       f'Macro-F1={summary["macro_f1"]:.3f}, '
-                      f'Target recall={summary["target_recall"]:.3f}')
+                      f'Recall={summary["recall"]:.3f}')
 
     return pd.DataFrame(summaries), pd.concat(histories, ignore_index=True)
 
@@ -453,7 +453,7 @@ def save_results(
     categories = [
         ('PREDICTIVE METRICS', [
             'n_evaluated', 'accuracy', 'macro_f1',
-            'target_precision', 'target_recall',
+            'precision', 'recall',
             'window_accuracy', 'window_macro_f1',
         ]),
         ('CONFUSION MATRIX AND COMPUTATIONAL COST', [

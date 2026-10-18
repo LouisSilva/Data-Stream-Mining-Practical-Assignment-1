@@ -68,6 +68,26 @@
 \draftinstructionstrue
 % \draftinstructionsfalse
 
+% --- Results Table Stuff --- %
+
+\definecolor{LisboaGreen}{HTML}{21A58B}
+\definecolor{PortoRed}{HTML}{A5213B}
+
+\newcommand{\splitcell}[2]{%
+	\begin{tikzpicture}[baseline=(current bounding box.center)]
+		\def\w{1.5}\def\h{0.9}
+		% Triangles
+		\fill[LisboaGreen!70] (0,\h) -- (\w,\h) -- (0,0) -- cycle;
+		\fill[PortoRed!70] (\w,\h) -- (\w,0) -- (0,0) -- cycle;
+		% Border and diagonal
+		\draw[black] (0,0) rectangle (\w,\h);
+		\draw[black] (\w,\h) -- (0,0);
+		% Values
+		\node[anchor=north west, font=\small, inner sep=2pt] at (0,\h) {#1};
+		\node[anchor=south east, font=\small, inner sep=2pt] at (\w,0) {#2};
+	\end{tikzpicture}%
+}
+
 % -----------------------------------------------------------------------------%
 % 2. VISUAL IDENTITY
 % -----------------------------------------------------------------------------%
@@ -544,6 +564,9 @@
 	\end{equation}
 	
 	\subsection{Model configuration}
+	
+	\autoref{tab:model-config} shows the five models used and their selected parameters.
+	
 	\begin{table}[H]
 		\centering
 		\frenchspacing
@@ -575,63 +598,86 @@
 	% =============================================================================
 	\instruction{Present only the evidence needed to answer the assignment. Interpret results rather than ranking models. Discuss class imbalance, event detection, differences between Representation A and Representation B, model behaviour over time, and computational cost. Connect model evidence back to the stream characteristics identified earlier. At least two analyses or visualisations in the complete report must be original group-designed analyses rather than direct reproductions of the starter-code figures. Suggested length: one to one-and-a-half pages.}
 	
-	\subsection{Predictive performance - City A}
-	\begin{table}[H]
+	\begin{table}[htbp]
 		\centering
-		\caption{Final predictive results for \CityA.}
-		\label{tab:city-a-results}
-		\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
-			\toprule
-			\textbf{Model} & \textbf{Acc.} & \textbf{Macro-F1} & \textbf{Prec.} & \textbf{Recall} \\
-			\midrule
-			GaussianNB & -- & -- & -- & -- \\
-			Online Logistic & -- & -- & -- & -- \\
-			Hoeffding Tree & -- & -- & -- & -- \\
-			Online Bagging & -- & -- & -- & -- \\
-			Adaptive Random Forest & -- & -- & -- & -- \\
-			\bottomrule
-		\end{tabularx}
+		\caption
+		{
+			Predictive and computational performance for Representation A.
+			Predictive metrics are reported as percentages.
+			Each cell reports
+			\colorbox{LisboaGreen!70}{\scriptsize Lisboa}
+			in the top-left triangle and
+			\colorbox{PortoRed!70}{\scriptsize Porto}
+			in the bottom-right triangle.
+		}
+		\label{tab:representation-a-results}
+		
+		\resizebox{\textwidth}{!}{%
+			\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
+				\toprule
+				\textbf{Model}
+				& \textbf{Acc.}
+				& \textbf{Macro-F1}
+				& \textbf{Prec.}
+				& \textbf{Recall}
+				& \textbf{Pred. ms/event}
+				& \textbf{Update ms/event} \\
+				\midrule
+				GaussianNB & \splitcell{92.1}{89.2} & \splitcell{75.1}{79.4} & \splitcell{84.8}{90.8} & \splitcell{40.2}{50.8} & \splitcell{0.052}{0.052} & \splitcell{0.002}{0.002} \\[4pt]
+				Online Logistic & \splitcell{92.5}{90.4} & \splitcell{77.4}{82.7} & \splitcell{83.1}{88.2} & \splitcell{45.7}{59.7} & \splitcell{0.002}{0.002} & \splitcell{0.005}{0.005} \\[4pt]
+				Hoeffding Tree & \splitcell{93.4}{92.2} & \splitcell{83.6}{87.8} & \splitcell{74.4}{80.4} & \splitcell{67.8}{80.6} & \splitcell{0.005}{0.006} & \splitcell{0.009}{0.009} \\[4pt]
+				Online Bagging & \splitcell{93.5}{92.2} & \splitcell{84.2}{87.8} & \splitcell{73.1}{80.5} & \splitcell{71.0}{80.5} & \splitcell{0.031}{0.031} & \splitcell{0.049}{0.050} \\[4pt]
+				Adaptive Random \allowbreak Forest & \splitcell{92.6}{90.4} & \splitcell{79.9}{84.4} & \splitcell{75.1}{78.8} & \splitcell{55.7}{71.0} & \splitcell{0.027}{0.028} & \splitcell{0.120}{0.140} \\
+				\bottomrule
+			\end{tabularx}
+		}
 	\end{table}
+	
+	\begin{table}[htbp]
+		\centering
+		\caption
+		{
+			Predictive and computational performance for Representation B.
+			Predictive metrics are reported as percentages.
+			Each cell reports
+			\colorbox{LisboaGreen!70}{\scriptsize Lisboa}
+			in the top-left triangle and
+			\colorbox{PortoRed!70}{\scriptsize Porto}
+			in the bottom-right triangle.
+		}
+		\label{tab:representation-b-results}
+		
+		\resizebox{\textwidth}{!}{%
+			\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
+				\toprule
+				\textbf{Model}
+				& \textbf{Acc.}
+				& \textbf{Macro-F1}
+				& \textbf{Prec.}
+				& \textbf{Recall}
+				& \textbf{Pred. ms/event}
+				& \textbf{Update ms/event} \\
+				\midrule
+				GaussianNB & \splitcell{91.5}{89.7} & \splitcell{77.1}{82.4} & \splitcell{69.4}{81.2} & \splitcell{51.2}{63.1} & \splitcell{0.062}{0.062} & \splitcell{0.004}{0.004} \\[4pt]
+				Online Logistic & \splitcell{92.7}{90.6} & \splitcell{79.3}{83.9} & \splitcell{79.3}{83.2} & \splitcell{51.7}{65.9} & \splitcell{0.003}{0.003} & \splitcell{0.009}{0.009} \\[4pt]
+				Hoeffding Tree & \splitcell{93.2}{92.0} & \splitcell{83.8}{87.5} & \splitcell{71.7}{79.6} & \splitcell{71.0}{80.4} & \splitcell{0.006}{0.006} & \splitcell{0.016}{0.017} \\[4pt]
+				Online Bagging & \splitcell{93.5}{92.2} & \splitcell{84.1}{87.8} & \splitcell{73.1}{80.1} & \splitcell{70.9}{80.8} & \splitcell{0.033}{0.033} & \splitcell{0.082}{0.086} \\[4pt]
+				Adaptive Random \allowbreak Forest & \splitcell{92.2}{90.3} & \splitcell{79.0}{84.3} & \splitcell{73.1}{77.8} & \splitcell{54.3}{71.5} & \splitcell{0.027}{0.027} & \splitcell{0.144}{0.165} \\
+				\bottomrule
+			\end{tabularx}
+		}
+	\end{table}
+	
+	Gaussian naive bayes and online logistic regression performed better with Representation B, but Hoeffding trees, online bagging, and adaptive random forests performed the same or worse with Representation B compared to Representation A.
+	
+	
+	\subsection{Predictive performance - City A}
 	
 	\subsection{Predictive performance - City B}
-	\begin{table}[H]
-		\centering
-		\caption{Final predictive results for \CityB.}
-		\label{tab:city-b-results}
-		\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
-			\toprule
-			\textbf{Model} & \textbf{Acc.} & \textbf{Macro-F1} & \textbf{Prec.} & \textbf{Recall} \\
-			\midrule
-			GaussianNB & -- & -- & -- & -- \\
-			Online Logistic & -- & -- & -- & -- \\
-			Hoeffding Tree & -- & -- & -- & -- \\
-			Online Bagging & -- & -- & -- & -- \\
-			Adaptive Random Forest & -- & -- & -- & -- \\
-			\bottomrule
-		\end{tabularx}
-	\end{table}
 	
 	\subsection{Computational evidence}
-	\begin{table}[H]
-		\centering
-		\caption{Prediction and update cost per event. Report values measured within the same run and environment.}
-		\label{tab:cost-results}
-		\begin{tabularx}{0.98\textwidth}{@{}Y C{2.0cm} C{2.0cm} C{2.0cm} C{2.0cm}@{}}
-			\toprule
-			& \multicolumn{2}{c}{\textbf{\CityA}} & \multicolumn{2}{c}{\textbf{\CityB}} \\
-			\cmidrule(lr){2-3}\cmidrule(lr){4-5}
-			\textbf{Model} & \textbf{Pred. ms/event} & \textbf{Update ms/event} & \textbf{Pred. ms/event} & \textbf{Update ms/event} \\
-			\midrule
-			GaussianNB & -- & -- & -- & -- \\
-			Online Logistic & -- & -- & -- & -- \\
-			Hoeffding Tree & -- & -- & -- & -- \\
-			Online Bagging & -- & -- & -- & -- \\
-			Adaptive Random Forest & -- & -- & -- & -- \\
-			\bottomrule
-		\end{tabularx}
-	\end{table}
 	
-	\reportfigure{figures/model_evidence.png}{Selected model evidence supporting the discussion. Do not use a generic caption such as ``model results''.}{fig:model-evidence}
+	\reportfigure{figures/model\_evidence.png}{Selected model evidence supporting the discussion. Do not use a generic caption such as ``model results''.}{fig:model-evidence}
 	
 	\instruction{After the tables/figures, explain the relationships you observed. Examples of useful questions: Did higher Accuracy coincide with higher Recall? Did temporal features improve event detection? Did an ensemble provide a meaningful gain relative to its computational cost? Did one city's class distribution make the task more difficult?}
 	
@@ -665,14 +711,7 @@
 	% =============================================================================
 	\instruction{This statement is mandatory. Adapt one of the formulations below truthfully. Delete the option that does not apply. Generative AI may assist with programming tasks, but it may not perform the interpretation of experimental results, discussion, business recommendation, technical recommendation, or evidence-based conclusions.}
 	
-	\begin{businessbox}[title=Option A - Generative AI was used for permitted assistance]
-		\emph{Generative AI tools were used to assist with [replace with the permitted uses: e.g., Python debugging, plotting syntax, code organisation]. They were not used to interpret experimental results or produce the analysis, discussion, business recommendation, technical recommendation, or evidence-based conclusions.}
-	\end{businessbox}
-	
-	\begin{businessbox}[title=Option B - No generative AI was used]
-		\emph{No generative AI tools were used in the preparation of this assignment.}
-	\end{businessbox}
-	
+	Generative AI tools were used to assist with Python debugging, plotting syntax, LaTeX syntax, and code organisation. They were not used to interpret experimental results or produce the analysis, discussion, business recommendation, technical recommendation, or evidence-based conclusions.
 	
 	% =============================================================================
 	% REFERENCES
