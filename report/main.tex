@@ -328,14 +328,14 @@
 	Specifically, $R_m$ denotes the percentage of observations in a given month $m$ that were rain events. In addition, let
 	
 	\begin{equation}
-		W^{(24)}_{t-1} \;\coloneqq\; \{y_{t-24},\,y_{t-23},\,\dotsc,\,y_{t-1}\},
+		W^{(24)}_{t-1} \;\coloneqq\; \{y_{t-24}, y_{t-23}, \dotsc, y_{t-1}\},
 	\end{equation}
 	
 	be a sliding window containing the past $24$ observations. Then, the number of rain-event hours in the past $24$ hours is given by:
 	
 	\begin{equation}
 		\label{eq:C_t^(24)}
-		C^{(24)}_t \;\coloneqq \sum_{y_i \in W^{(24)}_{t-1}} y_i, \qquad C^{(24)}_t \in \{0,\,1,\,\dotsc,\,24\}.
+		C^{(24)}_t \;\coloneqq \sum_{y_i \in W^{(24)}_{t-1}} y_i, \qquad C^{(24)}_t \in \{0, 1, \dotsc, 24\}.
 	\end{equation}
 	
 	% =============================================================================
@@ -398,7 +398,7 @@
 	
 	Thus, almost all rain events occurred when the relative humidity was at least $50\%$. The distribution of $T_t$ is relatively symmetric, with the mean and median being approximately equal to $15.5\,^\circ\mathrm{C}$, and the standard deviation being $4.8\,^\circ\mathrm{C}$. The distribution of $W_t$ is positively skewed, with a skewness of $0.86$ and median of $13\,\mathrm{km/h}$.
 	
-	\autoref{fig:porto-monthly-rain-event-rate} shows the monthly rain-event evolution by plotting $R_m$ (defined in \autoref{eq:R_m}) for all $m$. Intuitively, the rain-event rate tends to peak in winter, and dip in summer. \autoref{fig:porto-distribution-of-rainy-hours} shows the distribution of rainy hours within the 24-hour sliding window $C^{(24)}_t$.
+	\autoref{fig:porto-monthly-rain-event-rate} shows the monthly rain-event evolution by plotting $R_m$ (defined in \autoref{eq:R_m}) for all $m$. Intuitively, the rain-event rate tends to peak in winter, and dip in summer. \autoref{fig:porto-distribution-of-rainy-hours} shows the distribution of rainy hours within a 24-hour sliding window by plotting $C^{(24)}_t$. As expected, most of the observation mass is on zero rain-event hours in the preceding 24 hours. However, after a steep decline, the distribution slowly tapers off. This suggests that most of the time it doesn't rain, but when it does, the length of the rainy spell is uncertain.
 	
 	\begin{table}[H]
 		\centering
@@ -427,23 +427,73 @@
 	% =============================================================================
 	\instruction{Compare the two cities before discussing classifier scores. Focus on differences that matter to the assigned business question: event frequency, variability, persistence, temporal patterns, operational thresholds, or other justified indicators. The comparison must use compatible definitions for both cities. This section is joint work. Suggested length: about one page.}
 	
+	To compare the business-relevant differences in the two cities, we will define two additional statistics. Let $B_i$ denote an event where for some observation indices $s_i$ and $e_i$, where $s_i \le e_i$, all observations $y_{s_i} = y_{s_i + 1} = \dotsc = y_{e_i} = 1$, and $y_{s_i - 1} = 0$ and $y_{e_i + 1} = 0$. Therefore, $B_i$ describes the $i$-th maximal sequence of observations where there was a rain event, informally known as a ``rainy period''. Formally,
+	
+	% \begin{equation}
+	% 	B_i \;\coloneqq\; \{s_i, s_{i}+1, \dotsc, e_i\}, \qquad \text{where} \quad y_\tau = 1 \quad \forall \tau \in B_i.
+	% \end{equation}
+	
+	\begin{equation}
+		B_i \coloneqq \{s_i,\,s_i+1,\,\dotsc,\,e_i\}
+		\quad \text{such that} \quad
+		\begin{cases}
+			y_\tau = 1, \; \forall \tau \in B_i, \text{ and} \\
+			y_{s_i-1} = y_{e_i+1} = 0.
+		\end{cases}
+	\end{equation}
+	
+	Therefore, if we observed $b \in \mathbb{N}$ total rainy periods, then
+	
+	\begin{equation}
+		\mathrm{median} \left(\left(\lvert B_i \rvert\right)_{i=1}^b \right)
+	\end{equation}
+	
+	denotes the median length of these rainy periods. Similarly, we can define the $i$-th ``dry period'' as
+	
+	% \begin{equation}
+	% 	D_i \;\coloneqq\; \{s_i, s_{i}+1, \dotsc, e_i\}, \qquad \text{where} \quad y_\tau = 0 \quad \forall \tau \in D_i.
+	% \end{equation}
+	
+	\begin{equation}
+		D_i \coloneqq \{s_i,\,s_i+1,\,\dotsc,\,e_i\}
+		\quad \text{such that} \quad
+		\begin{cases}
+			y_\tau = 0, \; \forall \tau \in D_i, \text{ and} \\
+			y_{s_i-1} = y_{e_i+1} = 1.
+		\end{cases}
+	\end{equation}
+	
+	Consequently, if we observed $d \in \mathbb{N}$ total dry periods, then
+	
+	\begin{equation}
+		\mathrm{median} \left(\left(\lvert D_i \rvert\right)_{i=1}^d \right)
+	\end{equation}
+	
+	denotes the median length of these periods. \autoref{tab:business-comparison} shows these two statistics for both cities. As shown, \CityA\ has a smaller median length of rainy periods, and a larger median length of dry periods than \CityB. This suggests that \CityB\ simultaneously has shorter dry periods and longer rainy periods. Furthermore, \CityB\ also has a higher variability in its monthly rain-event rate, denoted by $\mathrm{std}(R_m)$. This can also be seen visually in panel (a) of \autoref{fig:city-comparison}: in the winter months, the rain-event rate for \CityB\ spikes much higher than \CityA.
+	
+	In addition, the mean number of rain-event hours within a 24-hour sliding window, given that there is at least one rain-event hour, is higher for \CityB. This suggests that, conditional on a 24-hour window containing at least one rain-event hour, rain-event hours are more concentrated within such windows in \CityB. This can be seen visually in panel (b) of \autoref{fig:city-comparison}: beyond approximately eight rain-event hours per 24-hour window, the proportions for \CityA\ declines much more sharply than those for \CityB. Furthermore, \CityB\ retains relatively larger proportions at higher values of $C^{(24)}_t$.
+	
+	For walking tours, shorter dry periods and longer rainy periods imply fewer uninterrupted windows in which the tours can be scheduled without rain-related disruption.
+	
 	\begin{table}[H]
 		\centering
-		\caption{Business-relevant comparison before modelling. Choose indicators that are meaningful for your assignment.}
+		\caption{Business-relevant comparison before modelling.}
 		\label{tab:business-comparison}
+		\renewcommand{\arraystretch}{1.3}
 		\begin{tabularx}{0.92\textwidth}{@{}Y C{3.0cm} C{3.0cm}@{}}
 			\toprule
 			\textbf{Indicator} & \textbf{\CityA} & \textbf{\CityB} \\
 			\midrule
 			Positive-event rate (\%) & $12.1$ & $20.4$ \\
-			Selected variability / persistence measure & -- & -- \\
-			Selected business-relevant statistic & -- & -- \\
-			Additional group-designed indicator & -- & -- \\
+			$\mathrm{std}(R_m)$ (\%) & $9.3$ & $12.7$ \\
+			$\mathbb{E}\left[C^{(24)}_t \mid C^{(24)}_t > 0\right]$ (hours) & $7.1$ & $10.3$ \\
+			$\mathrm{median} \left(\left(\lvert B_i \rvert\right)_{i=1}^b \right)$ & $2$ & $3$ \\
+			$\mathrm{median} \left(\left(\lvert D_i \rvert\right)_{i=1}^d \right)$ & $4$ & $3$ \\
 			\bottomrule
 		\end{tabularx}
 	\end{table}
 	
-	\reportfigure{figures/city_comparison.png}{Comparative evidence for \CityA\ and \CityB. Replace the caption with the specific analytical message.}{fig:city-comparison}
+	\reportfigure{figures/city\_comparison.pdf}{Comparison of monthly rain-event rates and the distributions of rain-event hours in preceding 24-hour sliding windows for \CityA\ and \CityB.}{fig:city-comparison}
 	
 	
 	% =============================================================================
@@ -496,18 +546,18 @@
 	\subsection{Model configuration}
 	\begin{table}[H]
 		\centering
+		\frenchspacing
 		\caption{Models and main configurations used in the experiment.}
 		\label{tab:model-config}
 		\begin{tabularx}{0.96\textwidth}{@{}L{4.7cm}Y@{}}
 			\toprule
 			\textbf{Model} & \textbf{Main configuration / parameters} \\
 			\midrule
-			Gaussian Naive Bayes & Replace with relevant settings or ``default'' \\
-			Online Logistic Regression & Replace with optimizer / learning-rate settings \\
-			Hoeffding Tree & Replace with grace period, delta, tau, leaf prediction, etc. \\
-			Online Bagging & Replace with base learner, number of models, seed, etc. \\
-			Adaptive Random Forest & Replace with number of models and other relevant settings \\
-			Optional model (if used) & Replace or delete this row \\
+			Gaussian Naive Bayes & Default \\
+			Online Logistic Regression & \texttt{l2: 0}, \texttt{standardize: true}, \texttt{optimizer: Stochastic Gradient Descent} with \texttt{learning-rate: 0.05},  \\
+			Hoeffding Tree & \texttt{grace\_period: 50}, \texttt{delta: 0.001}, \texttt{tau: 0.10}, \texttt{leaf\_prediction: "mc"} \\
+			Online Bagging & \texttt{base-learner: Hoeffding Tree} with the same parameters as defined above, \texttt{n\_models: 5}, \texttt{seed: 42} \\
+			Adaptive Random Forest & \texttt{n\_models: 5}, \texttt{max\_features: "sqrt"}, \texttt{lambda\_value: 6}, \texttt{grace\_period: 30}, \texttt{delta: 0.001}, \texttt{tau: 0.01}, \texttt{leaf\_prediction: "mc"}, \texttt{seed: 42} \\
 			\bottomrule
 		\end{tabularx}
 	\end{table}
@@ -528,7 +578,7 @@
 	\subsection{Predictive performance - City A}
 	\begin{table}[H]
 		\centering
-		\caption{Final predictive results for \CityA. Report the same evaluation period for every model.}
+		\caption{Final predictive results for \CityA.}
 		\label{tab:city-a-results}
 		\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
 			\toprule
@@ -546,7 +596,7 @@
 	\subsection{Predictive performance - City B}
 	\begin{table}[H]
 		\centering
-		\caption{Final predictive results for \CityB. Report the same evaluation period for every model.}
+		\caption{Final predictive results for \CityB.}
 		\label{tab:city-b-results}
 		\begin{tabularx}{0.98\textwidth}{@{}Y C{1.55cm} C{1.55cm} C{1.55cm} C{1.55cm}@{}}
 			\toprule

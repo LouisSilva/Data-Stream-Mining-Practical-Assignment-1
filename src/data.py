@@ -14,11 +14,11 @@ def create_random_suffix(length=8) -> str:
     return ''.join(secrets.choice(alphabet) for _ in range(length))
 
 
-def download_data(city: str, config: dict) -> None:
+def download_data(data_config: dict, city: str) -> None:
     """
     Uses the parameters from the config to query the API for a specific city, and if successful, writes the results to a json file.
     """
-    api_params = config["api_parameters"]
+    api_params = data_config["api_parameters"]
     open_meteo_params = {
         "latitude": api_params[city]["latitude"],
         "longitude": api_params[city]["longitude"],
@@ -37,20 +37,19 @@ def download_data(city: str, config: dict) -> None:
         print(f"Could not reach Open-Meteo. Reason: {exc}")
         return None
 
-    raw_dir = Path(find_project_root() / config["data"]["raw_directory"])
+    raw_dir = Path(find_project_root() / data_config["raw_directory"])
     raw_dir.mkdir(parents=True, exist_ok=True)
 
     file_path = raw_dir / f"{city}_openmeteo_raw.json"
-    
     with open(file_path, "w", encoding="utf-8") as file:
         json.dump(open_meteo_json, file, indent=2)
 
 
-def load_data_from_json(city: str, config: dict) -> pd.DataFrame:
+def load_data_from_json(data_config: dict, city: str) -> pd.DataFrame:
     """
     Loads the raw data for a city from a local json file.
     """
-    raw_dir = Path(find_project_root() / config["data"]["raw_directory"])
+    raw_dir = Path(find_project_root() / data_config["raw_directory"])
     file_path = raw_dir / f"{city}_openmeteo_raw.json"
 
     with open(file_path, "r", encoding="utf-8") as file:

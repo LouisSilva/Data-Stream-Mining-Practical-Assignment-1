@@ -3,6 +3,9 @@ random_seed: 42
 plotting:
   overleaf_text_width_pt: 463.7796
   overleaf_font_size: 11
+  colours:
+    professor_defined_green: "#21A58B"
+    complementary_professor_red: "#A5213B"
 
 api_parameters:
   url: "https://archive-api.open-meteo.com/v1/archive"
@@ -18,8 +21,7 @@ api_parameters:
     longitude: -8.6291
 
 data:
-  raw_directory: "data/raw" # Un-processed data
-  # clean_directory: "data/clean" # Processed data # Idk if we need this
+  raw_directory: "data/raw"
   target: "rain_event"
 
 cleaning:

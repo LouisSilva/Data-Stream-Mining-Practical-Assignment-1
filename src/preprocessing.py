@@ -55,6 +55,10 @@ def _add_temporal_feature(df: pd.DataFrame, feature: str) -> None:
         df[feature] = past.rolling(window).std(ddof=1)
 
 
+def add_rain_event(df: pd.DataFrame) -> None:
+    df["rain_event"] = (df["precipitation"] >= 0.1).astype(int)
+
+
 def prepare_city_stream(preprocessing_config: dict, df: pd.DataFrame) -> dict:
     """Returns (timestamp, X_A, X_B, y)."""
     features = preprocessing_config.get("features")
@@ -82,7 +86,8 @@ def prepare_city_stream(preprocessing_config: dict, df: pd.DataFrame) -> dict:
         raise ValueError("Missing weather values must be handled.")
 
     # Target
-    df["rain_event"] = (df["precipitation"] >= 0.1).astype(int)
+    if "rain_event" not in df.columns:
+        add_rain_event(df)
 
     # Representation A
     for feature_name, raw_column in zip(FEATURES_A, RAW_FEATURES):
