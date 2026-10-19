@@ -59,3 +59,35 @@ def load_data_from_json(data_config: dict, city: str) -> pd.DataFrame:
     df["time"] = pd.to_datetime(df["time"])
 
     return df
+
+
+def check_hourly_continuity(df: pd.DataFrame) -> pd.Series:
+    timestamps = (
+        pd.to_datetime(df["time"])
+        .sort_values()
+        .reset_index(drop=True)
+    )
+
+    differences = timestamps.diff()
+
+    irregular = differences[
+        differences.notna() &
+        (differences != pd.Timedelta(hours=1))
+    ]
+
+    print(f"Number of observations: {len(timestamps)}")
+    print(f"Duplicate timestamps: {timestamps.duplicated().sum()}")
+    print(f"Non-hourly transitions: {len(irregular)}")
+
+    if irregular.empty:
+        print("The stream is continuous at hourly intervals.")
+    else:
+        print("\nIrregular transitions:")
+        for i in irregular.index:
+            print(
+                f"{timestamps.iloc[i-1]} -> "
+                f"{timestamps.iloc[i]} "
+                f"({differences.iloc[i]})"
+            )
+
+    return irregular

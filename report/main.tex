@@ -42,6 +42,8 @@
 % Packages added by student
 % -----------------------------------------------------------------------------%
 \usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 % -----------------------------------------------------------------------------%
 % 1. STUDENT METADATA - EDIT THIS BLOCK
@@ -57,7 +59,7 @@
 \newcommand{\EventTarget}{T1: Rain Event}
 \newcommand{\TargetDefinition}{$y_t = 1$ if $P_t \ge 0.1$ mm; otherwise, $y_t = 0$}
 \newcommand{\HistoricalPeriod}{2020-01-01 to 2025-12-31}
-\newcommand{\WarmupRule}{Replace with the warm-up fraction or rule}
+\newcommand{\WarmupRule}{Earliest $25\%$ of chronological observations}
 \newcommand{\RandomSeed}{42}
 \newcommand{\SubmissionDate}{25 October 2026}
 
@@ -444,17 +446,14 @@
 	
 	% =============================================================================
 	\section{Comparative Data Analysis}
+	\label{sec:comparative-data-analysis}
 	% =============================================================================
 	\instruction{Compare the two cities before discussing classifier scores. Focus on differences that matter to the assigned business question: event frequency, variability, persistence, temporal patterns, operational thresholds, or other justified indicators. The comparison must use compatible definitions for both cities. This section is joint work. Suggested length: about one page.}
 	
 	To compare the business-relevant differences in the two cities, we will define two additional statistics. Let $B_i$ denote an event where for some observation indices $s_i$ and $e_i$, where $s_i \le e_i$, all observations $y_{s_i} = y_{s_i + 1} = \dotsc = y_{e_i} = 1$, and $y_{s_i - 1} = 0$ and $y_{e_i + 1} = 0$. Therefore, $B_i$ describes the $i$-th maximal sequence of observations where there was a rain event, informally known as a ``rainy period''. Formally,
 	
-	% \begin{equation}
-	% 	B_i \;\coloneqq\; \{s_i, s_{i}+1, \dotsc, e_i\}, \qquad \text{where} \quad y_\tau = 1 \quad \forall \tau \in B_i.
-	% \end{equation}
-	
 	\begin{equation}
-		B_i \coloneqq \{s_i,\,s_i+1,\,\dotsc,\,e_i\}
+		B_i \;\coloneqq\; \{s_i,\,s_i+1,\,\dotsc,\,e_i\}
 		\quad \text{such that} \quad
 		\begin{cases}
 			y_\tau = 1, \; \forall \tau \in B_i, \text{ and} \\
@@ -470,12 +469,8 @@
 	
 	denotes the median length of these rainy periods. Similarly, we can define the $i$-th ``dry period'' as
 	
-	% \begin{equation}
-	% 	D_i \;\coloneqq\; \{s_i, s_{i}+1, \dotsc, e_i\}, \qquad \text{where} \quad y_\tau = 0 \quad \forall \tau \in D_i.
-	% \end{equation}
-	
 	\begin{equation}
-		D_i \coloneqq \{s_i,\,s_i+1,\,\dotsc,\,e_i\}
+		D_i \;\coloneqq\; \{s_i,\,s_i+1,\,\dotsc,\,e_i\}
 		\quad \text{such that} \quad
 		\begin{cases}
 			y_\tau = 0, \; \forall \tau \in D_i, \text{ and} \\
@@ -536,7 +531,7 @@
 		Extend Representation A with justified recent context, for example rolling means, rolling standard deviations, recent deltas, or recent event frequency. All windowed features must use observations strictly before the prediction time.
 	\end{businessbox}
 	
-	For Representation B, we need to first define some features. Let
+	For Representation B, we first need to define some features. Let
 	
 	\begin{align}
 		\Delta P_t &\;\coloneqq\; P_{t-1} \:-\: P_{t-2}, \\
@@ -591,6 +586,30 @@
 	\end{keybox}
 	
 	\instruction{State explicitly that each prediction was evaluated before the current label was learned. Report Accuracy, Macro-F1, Precision, Recall and the confusion matrix, together with prediction and update cost per event. Explain which class is treated as the positive event class.}
+	
+	Algorithm \autoref{alg:prequential-evaluation-protocol} shows the evaluation protocol defined for this experiment. As shown, each prediction is evaluated before the current label is learnt. As defined in \autoref{eq:rain-event}, the positive event class, $y_t = 1$, denotes that at time $t$, $P_t \ge 0.1\mathrm{mm}$.
+	
+	\begin{algorithm}[H]
+		\caption{Prequential evaluation protocol defined in the \texttt{run\_experiments()} function in \texttt{src/evaluation.py}}
+		\label{alg:prequential-evaluation-protocol}
+		\begin{algorithmic}[1]
+			\ForAll{cities $c \in \{\text{\CityA}, \text{\CityB}\}$}
+				\ForAll{representations $r \in \{A,B\}$}
+					\ForAll{models $m$}
+						\State Initialise a fresh instance of model $m$
+						\ForAll{observations $t$ in the evaluation stream, chronologically,}
+							\State Predict $\hat{y}_t$ using $X_t^r$ and record prediction time
+							\State Compare $\hat{y}_t$ with $y_t$
+							\State Update accuracy, macro-F1, precision, recall, and the confusion matrix
+							\State Expose $y_t$ and update the model using $(X_t^r, y_t)$
+							\State Record model update time
+						\EndFor
+						\State Save final metrics, confusion matrix, and average prediction/update times for $(c, m, r)$
+					\EndFor
+				\EndFor
+			\EndFor
+		\end{algorithmic}
+	\end{algorithm}
 	
 	
 	% =============================================================================
@@ -668,8 +687,17 @@
 		}
 	\end{table}
 	
-	Gaussian naive bayes and online logistic regression performed better with Representation B, but Hoeffding trees, online bagging, and adaptive random forests performed the same or worse with Representation B compared to Representation A.
+	\autoref{tab:representation-a-results} and \autoref{tab:representation-b-results} show the accuracy, macro-F1, precision, and recall for each model, for Representation A and B respectively, followed by the prediction and update time in milliseconds for each event.
 	
+	For Gaussian naive Bayes and online logistic regression, Representation B provided an improvement over Representation A in macro-F1, and a large improvement in recall. The improvement in recall was accompanied by a decline in precision for both models in both cities. Consequently, these two models benefited from the temporal features added in Representation B in terms of macro-F1 and recall, although precision declined. 
+	
+	For Hoeffding trees, Representation B provided a $+0.2$ percentage point improvement in macro-F1 for \CityA, but a $-0.3$ percentage point deterioration for \CityB. Similarly, recall improved under Representation B for \CityA, but declined for \CityB. Furthermore, precision declined for both cities under Representation B. For online bagging, macro-F1 declined slightly for \CityA\ but remained unchanged for \CityB. For adaptive random forest, macro-F1 declined slightly for both cities under Representation B.
+	
+	Across all five models and both representations, \CityB\ achieves higher macro-F1, precision, and recall than \CityA. Recall is especially important because it measures the proportion of times the model predicted it was going to rain, given that it actually rained. Interestingly, in \autoref{sec:comparative-data-analysis} we discussed how \CityB\ had a higher monthly rain-event rate variability, and larger upper tail in its distribution of rain-event hours in the preceding 24 hours. One possible contributing factor is that \CityB\ has a higher positive-event rate than \CityA, so the models were given more predictive signalling on whether it was going to rain in \CityB, compared to \CityA.
+	
+	For all models, the update time was larger with Representation B compared to A. Similarly, prediction time generally increased with Representation B, although it remained unchanged for Hoeffding trees in \CityB\ and adaptive random forest in \CityA, and declined by $0.001$ milliseconds for adaptive random forest in \CityB. The Hoeffding tree model is considerably faster than online bagging and adaptive random forest, whilst achieving comparable macro-F1 and recall to online bagging, and generally higher macro-F1 and recall than adaptive random forest.
+	
+	In conclusion, the strongest model in terms of macro-F1 was online bagging. It achieved the highest macro-F1 in both cities under both representations, except that it tied with Hoeffding trees in \CityB\ under Representation A. Although the prediction and update times of online bagging were approximately 5 times those of Hoeffding trees, the observations in the data stream arrive hourly, so the additional processing time is unlikely to have an operational impact, although the computational cost remains higher.
 	
 	\subsection{Predictive performance - City A}
 	
@@ -703,7 +731,9 @@
 	% =============================================================================
 	\instruction{Explain what the study cannot establish. Consider the limited set of weather variables, the selected historical period, the simplified binary event definition, external business factors not included in Open-Meteo, computational measurements being environment-specific, and any modelling assumptions. Do not introduce new results here.}
 	
-	% WRITE YOUR LIMITATIONS BELOW THIS LINE.
+	The model parameters were not tuned.
+	
+	The observations only came hourly, and then we constructed a rain-event if there was 0.1mm or more of precipitation in that hour. That 0.1mm of precipitation couldve been concentrated on a much smaller period of time, e.g., 10 minutes, but then we just say that the whole hour is rainy.
 	
 	
 	% =============================================================================

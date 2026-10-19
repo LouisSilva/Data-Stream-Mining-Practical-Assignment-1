@@ -264,8 +264,6 @@ def evaluate_model(
         pred_ns += perf_counter_ns() - before
         
         if pred is None or pred not in (0, 1, False, True):
-            # Unlike the lab's cold-start counter, we require an actual 0/1
-            # prediction after warm-up so all models score the same events.
             raise RuntimeError(f'Non-binary prediction at {ts}: {pred!r}')
             
         # STEP 2: Evaluate the prediction before exposing this label to model.
@@ -283,7 +281,7 @@ def evaluate_model(
             # Save intermittent snapshots rather than one row for every event.
             history.append({'timestamp': ts, **metrics.snapshot()})
 
-    # Average model-call latency across *scored* events (warm-up excluded).
+    # Average model-call latency across scored events (warm-up excluded).
     result = metrics.snapshot()
     n = result['n_evaluated']
     result.update({
@@ -351,9 +349,9 @@ def run_experiments(config: dict, city_streams: dict) -> tuple[pd.DataFrame, pd.
             X = stream[f'X_{representation}']
             
             for model_name in model_names:
-                # Model factory reads hyperparameters from YAML and starts from
-                # scratch; no model state leaks across experiments.
+                # Create a fresh model
                 model = build_model(models_config, model_name)
+                
                 summary, history = evaluate_model(
                     model, X, stream['y'], stream['timestamp'],
                     warmup_rows=warmup_rows,
@@ -373,7 +371,9 @@ def run_experiments(config: dict, city_streams: dict) -> tuple[pd.DataFrame, pd.
                 print(f'{city} / {representation} / {model_name}: '
                       f'Accuracy={summary["accuracy"]:.3f}, '
                       f'Macro-F1={summary["macro_f1"]:.3f}, '
-                      f'Recall={summary["recall"]:.3f}')
+                      f'Precision={summary["precision]:.3f}, '
+                      f'Recall={summary["recall"]:.3f}'
+                      )
 
     return pd.DataFrame(summaries), pd.concat(histories, ignore_index=True)
 
