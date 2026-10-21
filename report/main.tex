@@ -590,21 +590,20 @@
 	Algorithm \autoref{alg:prequential-evaluation-protocol} shows the evaluation protocol defined for this experiment. As shown, each prediction is evaluated before the current label is learnt. As defined in \autoref{eq:rain-event}, the positive event class, $y_t = 1$, denotes that at time $t$, $P_t \ge 0.1\mathrm{mm}$.
 	
 	\begin{algorithm}[H]
-		\caption{Prequential evaluation protocol defined in the \texttt{run\_experiments()} function in \texttt{src/evaluation.py}}
+		\caption{Prequential evaluation protocol used in the \texttt{ExperimentResults.run()} function in \texttt{src/results.py}}
 		\label{alg:prequential-evaluation-protocol}
 		\begin{algorithmic}[1]
 			\ForAll{cities $c \in \{\text{\CityA}, \text{\CityB}\}$}
 				\ForAll{representations $r \in \{A,B\}$}
 					\ForAll{models $m$}
 						\State Initialise a fresh instance of model $m$
-						\ForAll{observations $t$ in the evaluation stream, chronologically,}
-							\State Predict $\hat{y}_t$ using $X_t^r$ and record prediction time
-							\State Compare $\hat{y}_t$ with $y_t$
-							\State Update accuracy, macro-F1, precision, recall, and the confusion matrix
-							\State Expose $y_t$ and update the model using $(X_t^r, y_t)$
-							\State Record model update time
+						\State Warm-up $m$ using the earliest $25\%$ of chronological observations
+						\ForAll{observations $t$ in chronological order}
+							\State \textbf{Predict:} Obtain $\hat{y}_t$ using $X_t^r$ and record prediction time
+							\State \textbf{Evaluate:} Update metrics and confusion matrix using $(y_t, \hat{y}_t)$
+							\State \textbf{Learn:} Update $m$ using $(X^r_t, y_t)$ and record update time
 						\EndFor
-						\State Save final metrics, confusion matrix, and average prediction/update times for $(c, m, r)$
+						\State Save final metrics, confusion matrix, and mean processing times
 					\EndFor
 				\EndFor
 			\EndFor
@@ -689,23 +688,21 @@
 	
 	\autoref{tab:representation-a-results} and \autoref{tab:representation-b-results} show the accuracy, macro-F1, precision, and recall for each model, for Representation A and B respectively, followed by the prediction and update time in milliseconds for each event.
 	
-	For Gaussian naive Bayes and online logistic regression, Representation B provided an improvement over Representation A in macro-F1, and a large improvement in recall. The improvement in recall was accompanied by a decline in precision for both models in both cities. Consequently, these two models benefited from the temporal features added in Representation B in terms of macro-F1 and recall, although precision declined. 
+	For Gaussian naive Bayes and online logistic regression, Representation B provided an improvement over Representation A in macro-F1, and a large improvement in recall. The improvement in recall was accompanied by a decline in precision for both models in both cities. Consequently, these two models clearly benefited from the temporal features added in Representation B in terms of macro-F1 and recall, although precision declined. 
 	
-	For Hoeffding trees, Representation B provided a $+0.2$ percentage point improvement in macro-F1 for \CityA, but a $-0.3$ percentage point deterioration for \CityB. Similarly, recall improved under Representation B for \CityA, but declined for \CityB. Furthermore, precision declined for both cities under Representation B. For online bagging, macro-F1 declined slightly for \CityA\ but remained unchanged for \CityB. For adaptive random forest, macro-F1 declined slightly for both cities under Representation B.
+	For Hoeffding trees, Representation B provided a $0.2$ percentage point improvement in macro-F1 for \CityA, but a $0.3$ percentage point deterioration for \CityB. Similarly, recall improved under Representation B for \CityA, but declined for \CityB. Furthermore, precision declined for both cities under Representation B. For online bagging, macro-F1 declined slightly for \CityA\ but remained unchanged for \CityB. For adaptive random forest, macro-F1 declined slightly for both cities under Representation B.
 	
-	Across all five models and both representations, \CityB\ achieves higher macro-F1, precision, and recall than \CityA. Recall is especially important because it measures the proportion of times the model predicted it was going to rain, given that it actually rained. Interestingly, in \autoref{sec:comparative-data-analysis} we discussed how \CityB\ had a higher monthly rain-event rate variability, and larger upper tail in its distribution of rain-event hours in the preceding 24 hours. One possible contributing factor is that \CityB\ has a higher positive-event rate than \CityA, so the models were given more predictive signalling on whether it was going to rain in \CityB, compared to \CityA.
+	Across all five models and both representations, \CityB\ achieves higher macro-F1, precision, and recall than \CityA. Recall is especially important because it measures the proportion of times the model predicted it was going to rain, given that it actually rained. Conversely, across all five models and both representations, \CityA\ achieves higher accuracy than \CityB, which may partly reflect its larger proportion of dry observations. Interestingly, in \autoref{sec:comparative-data-analysis} we discussed how \CityB\ had a higher monthly rain-event rate variability, and a larger upper tail in its distribution of rain-event hours in the preceding 24 hours. One possible contributing factor is that \CityB\ has a higher positive-event rate and more balanced target distribution than \CityA.
+	
+	\autoref{fig:model-performance-over-time} shows two panels, one for \CityA\ and one for \CityB, where the rolling macro-F1 score over a 720-observation (approximately 30-day) window was plotted over time for the online bagging and Hoeffding tree models under Representation A. For \CityB, the Hoeffding tree model almost perfectly follows the online bagging model. For \CityA\, however, their respective performances are more varied. For both models in \CityB, the rolling macro-F1 occasionally declines sharply before recovering. In \CityA, these declines appear more frequent and variable. The sharp declines to approximately $50\%$ occur during windows with very few rain events, where the models failed to detect any of those events despite achieving an accuracy close to $100\%$. This illustrates how high accuracy can conceal missed rain events in imbalanced streams.
 	
 	For all models, the update time was larger with Representation B compared to A. Similarly, prediction time generally increased with Representation B, although it remained unchanged for Hoeffding trees in \CityB\ and adaptive random forest in \CityA, and declined by $0.001$ milliseconds for adaptive random forest in \CityB. The Hoeffding tree model is considerably faster than online bagging and adaptive random forest, whilst achieving comparable macro-F1 and recall to online bagging, and generally higher macro-F1 and recall than adaptive random forest.
 	
-	In conclusion, the strongest model in terms of macro-F1 was online bagging. It achieved the highest macro-F1 in both cities under both representations, except that it tied with Hoeffding trees in \CityB\ under Representation A. Although the prediction and update times of online bagging were approximately 5 times those of Hoeffding trees, the observations in the data stream arrive hourly, so the additional processing time is unlikely to have an operational impact, although the computational cost remains higher.
+	In conclusion, the strongest model in terms of macro-F1 was online bagging. It achieved the highest macro-F1 in both cities under both representations, except that it tied with Hoeffding trees in \CityB\ under Representation A. Although the prediction and update times of online bagging were approximately 5 times those of Hoeffding trees, the observations in the data stream arrive hourly, so the additional processing time is unlikely to have an operational impact. Nevertheless, online bagging's small macro-F1 advantage must be weighed against its higher computational cost.
 	
-	\subsection{Predictive performance - City A}
+	\reportfigure{figures/model\_performance\_over\_time.pdf}{Rolling macro-F1 over a 720-observation (approximately 30-day) window for the online bagging and Hoeffding tree models under Representation A in (a) \CityA and (b) \CityB.}{fig:model-performance-over-time}
 	
-	\subsection{Predictive performance - City B}
 	
-	\subsection{Computational evidence}
-	
-	\reportfigure{figures/model\_evidence.png}{Selected model evidence supporting the discussion. Do not use a generic caption such as ``model results''.}{fig:model-evidence}
 	
 	\instruction{After the tables/figures, explain the relationships you observed. Examples of useful questions: Did higher Accuracy coincide with higher Recall? Did temporal features improve event detection? Did an ensemble provide a meaningful gain relative to its computational cost? Did one city's class distribution make the task more difficult?}
 	
@@ -718,11 +715,17 @@
 	\begin{businessbox}[title=Business Recommendation]
 		% REPLACE THIS TEXT WITH YOUR GROUP'S RECOMMENDATION.
 		From the weather-related operational perspective defined by \BusinessScenario, state which city appears more suitable, or explain why the available evidence does not support a clear preference. Cite the specific evidence that supports this conclusion.
+		
+		\autoref{tab:business-comparison} shows that \CityA\ has a smaller median length of rainy periods, larger median length of dry periods, less expected rain-events in a 24-hour sliding window conditional that there is at least one rain-event (meaning that when it does rain, how long does it last), a smaller monthly rain-event rate variability, and a smaller positive-event rate. Given those, \CityA\ is better for scheduling walking tours due to its fewer rain interruptions.
 	\end{businessbox}
 	
 	\begin{keybox}[title=Technical Recommendation]
 		% REPLACE THIS TEXT WITH YOUR GROUP'S RECOMMENDATION.
 		Recommend a streaming modelling approach for continuous prediction of \EventTarget. Explain the trade-off between event detection, overall predictive performance, computational cost, and practical complexity.
+		
+		Hoeffding trees with representation A. Representation B provides no benefit, and only increases prediction and update time. Online bagging is marginally better than hoeffding trees in terms of macro-F1, but it is approximately 5 times slower.
+		
+		For maximising recall and precision, meaning that they will be able to predict with more certainty whether it will rain or not, \CityB\ appears more suitable. \autoref{tab:representation-a-results} and \autoref{tab:representation-b-results} clearly show that under the hoeffding tree and online bagging models achieve the highest recall and precision for \CityB.
 	\end{keybox}
 	
 	
@@ -731,11 +734,15 @@
 	% =============================================================================
 	\instruction{Explain what the study cannot establish. Consider the limited set of weather variables, the selected historical period, the simplified binary event definition, external business factors not included in Open-Meteo, computational measurements being environment-specific, and any modelling assumptions. Do not introduce new results here.}
 	
-	The model parameters were not tuned.
+	Firstly, the model hyperparameters were not tuned. Secondly, the study only used a very limited set of weather variables. 
 	
 	The observations only came hourly, and then we constructed a rain-event if there was 0.1mm or more of precipitation in that hour. That 0.1mm of precipitation couldve been concentrated on a much smaller period of time, e.g., 10 minutes, but then we just say that the whole hour is rainy.
 	
+	The binary rain-event was not based on any empirical evidence. We did not actually measure that 0.1mm or more of precipitation per hour actually produces enough rain to permit cancelling a tour.
+	
 	The model doesnt take into account extra-ordinary weather events like prolonged storms
+	
+	Weather is chaotic?
 	
 	
 	% =============================================================================

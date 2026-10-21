@@ -6,6 +6,9 @@ plotting:
   colours:
     professor_defined_green: "#21A58B"
     complementary_professor_red: "#A5213B"
+    dark_professor_green: "#0B2F4F"
+    orange: "#F58518"
+    blue: "#4C78A8"
 
 api_parameters:
   url: "https://archive-api.open-meteo.com/v1/archive"
