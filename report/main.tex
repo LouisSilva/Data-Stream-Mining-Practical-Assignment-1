@@ -49,8 +49,8 @@
 % 1. STUDENT METADATA - EDIT THIS BLOCK
 % -----------------------------------------------------------------------------%
 \newcommand{\AssignmentCode}{PA01}
-\newcommand{\StudentA}{Gonçalo Gouveia}
-\newcommand{\StudentAID}{20260623}
+\newcommand{\StudentA}{Louis Silva}
+\newcommand{\StudentAID}{20260613}
 \newcommand{\StudentB}{Louis Silva}
 \newcommand{\StudentBID}{20260613}
 \newcommand{\CityA}{Lisboa}
@@ -67,8 +67,8 @@
 % Keep \draftinstructionstrue while writing to display guidance boxes.
 % BEFORE FINAL SUBMISSION change it to: \draftinstructionsfalse
 \newif\ifdraftinstructions
-\draftinstructionstrue
-% \draftinstructionsfalse
+% \draftinstructionstrue
+\draftinstructionsfalse
 
 % --- Results Table Stuff --- %
 
@@ -105,6 +105,7 @@
 \definecolor{WarningBG}{HTML}{FFF8EA}
 \definecolor{WarningLine}{HTML}{D28A12}
 \definecolor{SoftGrey}{HTML}{F1F3F5}
+\definecolor{White}{HTML}{FFFFFF}
 
 \color{BodyText}
 \setlength{\parindent}{0pt}
@@ -155,7 +156,7 @@
 	boxrule=0.8pt,leftrule=4pt,arc=2mm,
 	left=4mm,right=4mm,top=3mm,bottom=3mm,
 	before skip=0.7em,after skip=0.7em,
-	fonttitle=\bfseries\color{Navy},#1
+	fonttitle=\bfseries\color{White},#1
 }
 \newtcolorbox{warningbox}[1][]{
 	enhanced,breakable,colback=WarningBG,colframe=WarningLine,
@@ -262,11 +263,7 @@
 	\setcounter{page}{1}
 	
 	\draftbanner
-	
-	\begin{keybox}[title=Formatting rule]
-		Do not modify the report structure, section order, margins, body font size, or page geometry. You may add subsections where useful, but keep the mandatory sections below. Delete unused optional figure placeholders rather than filling space unnecessarily.
-	\end{keybox}
-	
+
 	% =============================================================================
 	\section{Business Context and Objective}
 	% =============================================================================
@@ -517,19 +514,11 @@
 	\instruction{Describe the two required feature representations, the five mandatory learners, any optional model used, model parameters, the prequential protocol, and the evaluation metrics. Explain how the same chronological history was preserved within each city. If you investigate one model parameter, state the values compared and the criterion used to interpret the trade-off. Suggested length: one to one-and-a-half pages.}
 	
 	\subsection{Feature representations}
-	\begin{businessbox}[title=Representation A - Previous-state features]
-		At minimum, use lagged weather information such as temperature$(t-1)$, humidity$(t-1)$, precipitation$(t-1)$ and wind$(t-1)$. Adapt the exact set to the available variables while preserving the no-future-information rule.
-	\end{businessbox}
-	
 	For Representation A, we define the feature vector $X^A_t$ using the lagged weather variables for temperature, humidity, precipitation, and wind:
 	
 	\begin{equation}
 		X_t^A \;\coloneqq\; \left(T_{t-1},\,H_{t-1},\,P_{t-1},\,W_{t-1}\right).
 	\end{equation}
-	
-	\begin{businessbox}[title=Representation B - Temporal stream context]
-		Extend Representation A with justified recent context, for example rolling means, rolling standard deviations, recent deltas, or recent event frequency. All windowed features must use observations strictly before the prediction time.
-	\end{businessbox}
 	
 	For Representation B, we first need to define some features. Let
 	
@@ -580,11 +569,7 @@
 		\end{tabularx}
 	\end{table}
 	
-	\subsection{Evaluation protocol}
-	\begin{keybox}[title=Mandatory streaming order]
-		\centering\Large\textbf{PREDICT $\rightarrow$ EVALUATE $\rightarrow$ LEARN}
-	\end{keybox}
-	
+	\subsection{Evaluation protocol}	
 	\instruction{State explicitly that each prediction was evaluated before the current label was learned. Report Accuracy, Macro-F1, Precision, Recall and the confusion matrix, together with prediction and update cost per event. Explain which class is treated as the positive event class.}
 	
 	Algorithm \autoref{alg:prequential-evaluation-protocol} shows the evaluation protocol defined for this experiment. As shown, each prediction is evaluated before the current label is learnt. As defined in \autoref{eq:rain-event}, the positive event class, $y_t = 1$, denotes that at time $t$, $P_t \ge 0.1\mathrm{mm}$.
@@ -700,7 +685,7 @@
 	
 	In conclusion, the strongest model in terms of macro-F1 was online bagging. It achieved the highest macro-F1 in both cities under both representations, except that it tied with Hoeffding trees in \CityB\ under Representation A. Although the prediction and update times of online bagging were approximately 5 times those of Hoeffding trees, the observations in the data stream arrive hourly, so the additional processing time is unlikely to have an operational impact. Nevertheless, online bagging's small macro-F1 advantage must be weighed against its higher computational cost.
 	
-	\reportfigure{figures/model\_performance\_over\_time.pdf}{Rolling macro-F1 over a 720-observation (approximately 30-day) window for the online bagging and Hoeffding tree models under Representation A in (a) \CityA and (b) \CityB.}{fig:model-performance-over-time}
+	\reportfigure{figures/model\_performance\_over\_time.pdf}{Rolling macro-F1 over a 720-observation (approximately 30-day) window for the online bagging and Hoeffding tree models under Representation A in (a) \CityA\ and (b) \CityB.}{fig:model-performance-over-time}
 	
 	
 	
@@ -713,19 +698,11 @@
 	\instruction{Provide two separate conclusions. The business recommendation must be supported by descriptive, temporal and operational evidence, not by whichever classifier achieved the highest score. The technical recommendation must be supported by predictive and computational evidence. State the scope of each recommendation carefully. Suggested length: about half a page.}
 	
 	\begin{businessbox}[title=Business Recommendation]
-		% REPLACE THIS TEXT WITH YOUR GROUP'S RECOMMENDATION.
-		From the weather-related operational perspective defined by \BusinessScenario, state which city appears more suitable, or explain why the available evidence does not support a clear preference. Cite the specific evidence that supports this conclusion.
-		
-		\autoref{tab:business-comparison} shows that \CityA\ has a smaller median length of rainy periods, larger median length of dry periods, less expected rain-events in a 24-hour sliding window conditional that there is at least one rain-event (meaning that when it does rain, how long does it last), a smaller monthly rain-event rate variability, and a smaller positive-event rate. Given those, \CityA\ is better for scheduling walking tours due to its fewer rain interruptions.
+		\autoref{tab:business-comparison} and \autoref{fig:city-comparison} shows that \CityA\ has a smaller median length of rainy periods, larger median length of dry periods, a lower mean number of rain-event hours in the preceding 24 hours, conditional on at least one rain-event occurring in that window, a smaller monthly rain-event rate variability, and a smaller positive-event rate. Based on these indicators, our recommendation is that \CityA\ is better for scheduling walking tours due to its fewer rain interruptions compared to \CityB.
 	\end{businessbox}
 	
 	\begin{keybox}[title=Technical Recommendation]
-		% REPLACE THIS TEXT WITH YOUR GROUP'S RECOMMENDATION.
-		Recommend a streaming modelling approach for continuous prediction of \EventTarget. Explain the trade-off between event detection, overall predictive performance, computational cost, and practical complexity.
-		
-		Hoeffding trees with representation A. Representation B provides no benefit, and only increases prediction and update time. Online bagging is marginally better than hoeffding trees in terms of macro-F1, but it is approximately 5 times slower.
-		
-		For maximising recall and precision, meaning that they will be able to predict with more certainty whether it will rain or not, \CityB\ appears more suitable. \autoref{tab:representation-a-results} and \autoref{tab:representation-b-results} clearly show that under the hoeffding tree and online bagging models achieve the highest recall and precision for \CityB.
+		Our technical recommendation for a streaming modelling approach for the continuous prediction of \EventTarget\ is to use the Hoeffding tree model with Representation A, with the parameters defined in \autoref{tab:model-config}. The Hoeffding tree model provides a favourable trade-off between macro-f1, recall, and computational cost. Furthermore, Representation B nearly doubled the update time of the Hoeffding tree, whilst only improving recall by 3.2 percentage points in \CityA\, but reducing it by 0.2 percentage points in \CityB. Online bagging provides a marginally better macro-F1 and recall, but is approximately 5 times slower.
 	\end{keybox}
 	
 	
