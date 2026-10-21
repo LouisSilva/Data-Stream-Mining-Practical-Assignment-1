@@ -4,8 +4,8 @@ Input for each city is the dictionary returned by prepare_city_stream():
     {"timestamp": pd.Series, "X_A": pd.DataFrame,
      "X_B": pd.DataFrame, "y": pd.Series}
 
-No model is fitted in batches. Warm-up: learn only. Evaluation:
-PREDICT -> EVALUATE -> LEARN, once per observation.
+No model is fitted in batches. Warm-up: learn only. 
+Evaluation: PREDICT -> EVALUATE -> LEARN, once per observation.
 """
 from __future__ import annotations
 
@@ -203,7 +203,8 @@ def evaluate_model(
     *,
     warmup_rows: int, 
     window_size: int = 200,
-    checkpoint_every: int = 1000
+    checkpoint_every: int = 1000,
+    prediction_records: list[dict] | None = None,
 ) -> tuple[dict, pd.DataFrame]:
     """Evaluate one fresh online model on a single chronological city stream.
 
@@ -229,6 +230,10 @@ def evaluate_model(
         
     checkpoint_every : int
         Write one metric-history record every this many evaluated events.
+
+    prediction_records : list[dict] | None
+        Optional list receiving one timestamp, actual label, and prediction
+        for each scored event. Warm-up observations are never included.
 
     Returns
     -------
@@ -268,6 +273,8 @@ def evaluate_model(
             
         # STEP 2: Evaluate the prediction before exposing this label to model.
         metrics.update(label, int(pred))
+        if prediction_records is not None:
+            prediction_records.append({"timestamp": ts, "y_true": label, "y_pred": int(pred)})
 
         # STEP 3: Incrementally update the model with the true label.
         # Timers cover only model calls, not metrics, data conversion, or I/O.
@@ -299,7 +306,10 @@ def evaluate_model(
     return result, pd.DataFrame(history)
 
 
-def run_experiments(config: dict, city_streams: dict) -> tuple[pd.DataFrame, pd.DataFrame]:
+def run_experiments(
+    config: dict, 
+    city_streams: dict,
+) -> tuple[pd.DataFrame, pd.DataFrame, list[dict]]:
     """Run every configured River model for both representations in each city.
 
     Parameters
@@ -310,10 +320,13 @@ def run_experiments(config: dict, city_streams: dict) -> tuple[pd.DataFrame, pd.
     config : dict
         Complete YAML settings; model definitions in ``config['models']`` and
         warm-up, sliding-window and checkpoint options in ``config['evaluation']``.
+    prediction_records : list[dict] | None
+        Optional output list. Only configured models and representation are
+        recorded; the results and metric history return values stay unchanged.
 
     Returns
     -------
-    (pandas.DataFrame, pandas.DataFrame)
+    (pandas.DataFrame, pandas.DataFrame, list[dict])
         One row per city/representation/model in summary; checkpointed model
         histories in the second DataFrame.  Each run starts with a fresh model.
     """
@@ -324,6 +337,22 @@ def run_experiments(config: dict, city_streams: dict) -> tuple[pd.DataFrame, pd.
     warmup_fraction = float(options.get('warmup_fraction', 0.25))
     window_size = int(options.get('window_size', 200))
     checkpoint_every = int(options.get('checkpoint_every', 1000))
+
+    # Save per-event predictions only for the models needed by the time plot.
+    trace_models = options.get('prediction_trace_models', ['online_bagging', 'hoeffding_tree'])
+    trace_representation = options.get('prediction_trace_representation', 'A')
+    if prediction_records is not None:
+        if not isinstance(trace_models, list) or not all(
+            isinstance(name, str) for name in trace_models
+        ):
+            raise TypeError('evaluation.prediction_trace_models must be a list of names')
+            
+        if trace_representation not in ('A', 'B'):
+            raise ValueError('evaluation.prediction_trace_representation must be A or B')
+            
+        unknown_models = set(trace_models) - set(model_names)
+        if unknown_models:
+            raise ValueError(f'Unknown prediction-trace models: {sorted(unknown_models)}')
     
     if not 0 < warmup_fraction < 1: raise ValueError('evaluation.warmup_fraction must be between 0 and 1')
     if not city_streams: raise ValueError('No city streams provided')
@@ -351,6 +380,13 @@ def run_experiments(config: dict, city_streams: dict) -> tuple[pd.DataFrame, pd.
             for model_name in model_names:
                 # Create a fresh model
                 model = build_model(models_config, model_name)
+
+                selected_for_trace = (
+                    prediction_records is not None
+                    and representation == trace_representation
+                    and model_name in trace_models
+                )
+                model_predictions = [] if selected_for_trace else None
                 
                 summary, history = evaluate_model(
                     model, X, stream['y'], stream['timestamp'],
@@ -358,6 +394,12 @@ def run_experiments(config: dict, city_streams: dict) -> tuple[pd.DataFrame, pd.
                     window_size=window_size,
                     checkpoint_every=checkpoint_every,
                 )
+
+                if selected_for_trace:
+                    prediction_records.extend({
+                        'city': city, 'representation': representation,
+                        'model': model_name, **row,
+                    } for row in model_predictions)
                 
                 summaries.append({
                     'city': city, 'representation': representation,
@@ -371,7 +413,7 @@ def run_experiments(config: dict, city_streams: dict) -> tuple[pd.DataFrame, pd.
                 print(f'{city} / {representation} / {model_name}: '
                       f'Accuracy={summary["accuracy"]:.3f}, '
                       f'Macro-F1={summary["macro_f1"]:.3f}, '
-                      f'Precision={summary["precision]:.3f}, '
+                      f'Precision={summary["precision"]:.3f}, '
                       f'Recall={summary["recall"]:.3f}'
                       )
 
@@ -394,10 +436,12 @@ def _ascii_table(frame: pd.DataFrame, columns: list[str]) -> str:
         [_format_report_cell(value, name) for name, value in zip(columns, record)]
         for record in frame[columns].itertuples(index=False, name=None)
     ]
+    
     widths = [
         max(len(col), *(len(row[i]) for row in rows))
         for i, col in enumerate(columns)
     ]
+    
     border = "+" + "+".join("-" * (width + 2) for width in widths) + "+"
 
     def line(values: list[str]) -> str:
@@ -413,7 +457,9 @@ def save_results(
     config: dict,
     summary: pd.DataFrame, 
     history: pd.DataFrame, 
-    out_dir: str | Path = 'results'
+    out_dir: str | Path = 'results',
+    *,
+    predictions: pd.DataFrame | None = None
 ) -> None:
     """Write a self-contained text report and optionally a CSV metric history.
 
@@ -422,6 +468,9 @@ def save_results(
 
     ``metric_history.csv`` is created only when
     ``config['evaluation']['write_history_to_csv']`` is ``True`` (default False).
+
+    When ``predictions`` is supplied, its scored prediction rows are also
+    exported as CSV using the same run suffix, for reproducible figures.
     """
     if not isinstance(summary, pd.DataFrame) or summary.empty:
         raise ValueError('summary must be a nonempty pandas DataFrame')
@@ -504,3 +553,12 @@ def save_results(
     history_path = output / f'metric_history_{random_suffix}.csv'
     if write_history:
         history.to_csv(history_path, index=False)
+
+    if predictions is not None and not predictions.empty:
+        required = {'city', 'representation', 'model', 'timestamp', 'y_true', 'y_pred'}
+        if not required.issubset(predictions.columns):
+            raise ValueError(f'predictions is missing columns: {sorted(required - set(predictions.columns))}')
+            
+        prediction_path = output / f'predictions_{random_suffix}.csv'
+        predictions.to_csv(prediction_path, index=False)
+        print(f'Saved {prediction_path}')

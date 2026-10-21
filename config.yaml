@@ -74,7 +74,9 @@ models:
       
 evaluation:
   warmup_fraction: 0.25
-  window_size: 200
-  checkpoint_every: 1000
+  window_size: 720 # 30 days
+  checkpoint_every: 24  # store daily window and cumulative metrics
   write_history_to_csv: false
+  prediction_trace_representation: "A"
+  prediction_trace_models: ["online_bagging", "hoeffding_tree"]
   

@@ -57,12 +57,12 @@ def plot_R_m(plotting_config: dict, df: pd.DataFrame, city: str) -> None:
         df.set_index("time")["rain_event"]
         .resample("MS")
         .mean()
+        .mul(100)
     )
 
-    monthly_rain["event_rate_pct"] = 100 * monthly_rain["mean"]
-
     fig, ax = plt.subplots(1, 1)
-    ax.plot(monthly_rain.index, monthly_rain["event_rate_pct"], linewidth=1.2, color=colour)
+    # ax.plot(monthly_rain.index, monthly_rain["event_rate_pct"], linewidth=1.2, color=colour)
+    ax.plot(monthly_rain.index, monthly_rain.values, linewidth=1.2, color=colour)
     
     # Labels
     ax.set_title(f"{city} Monthly Rain-Event Rate")
@@ -314,3 +314,109 @@ def plot_city_comparison(
     plt.tight_layout()
     plt.show()
     save_figure(fig, "city_comparison")
+
+
+def rolling_macro_f1(predictions: pd.DataFrame, window_size: int = 720) -> pd.Series:
+    """Rolling binary Macro-F1 from individual prequential predictions.
+
+    Both classes receive equal weight. An undefined class F1 is treated as
+    zero, matching the evaluation's ConfusionMatrix.scores() convention.
+    Results preceding a full window are NaN. Return values range from 0 to 1.
+    """
+    if window_size < 1:
+        raise ValueError('window_size must be >= 1')
+    if not {'y_true', 'y_pred'}.issubset(predictions.columns):
+        raise ValueError('predictions must include y_true and y_pred')
+
+    actual = predictions['y_true'].astype(int)
+    predicted = predictions['y_pred'].astype(int)
+    if not actual.isin([0, 1]).all() or not predicted.isin([0, 1]).all():
+        raise ValueError('y_true and y_pred must be binary')
+
+    def count(mask: pd.Series) -> pd.Series:
+        return mask.astype(int).rolling(window_size, min_periods=window_size).sum()
+
+    tp = count((actual == 1) & (predicted == 1))
+    tn = count((actual == 0) & (predicted == 0))
+    fp = count((actual == 0) & (predicted == 1))
+    fn = count((actual == 1) & (predicted == 0))
+
+    f1_positive = (2 * tp / (2 * tp + fp + fn).replace(0, np.nan)).fillna(0)
+    f1_negative = (2 * tn / (2 * tn + fp + fn).replace(0, np.nan)).fillna(0)
+    result = (f1_positive + f1_negative) / 2
+    result[tp.isna()] = np.nan
+    return result
+
+
+def plot_model_performance_over_time(
+    plotting_config: dict,
+    predictions: pd.DataFrame,
+    *,
+    window_size: int = 720,
+    sample_every: int = 24,
+    representation: str = 'A',
+) -> None:
+    """Compare rolling Macro-F1 for Bagging/HT in Lisboa and Porto.
+
+    Each panel shows one city with the same two models. All series use the
+    same window and both panels share a common y-axis. Downsampling is done
+    after computing hourly rolling metrics because it changes only the plot density.
+    """
+    if sample_every < 1:
+        raise ValueError('sample_every must be >= 1')
+    if not {'city', 'model', 'representation', 'timestamp', 'y_true', 'y_pred'}.issubset(predictions):
+        raise ValueError('Missing columns in prediction-level results')
+
+    # Use model colours (not the city colours used in the comparison plot).
+    models = {
+        'online_bagging': ('Online Bagging', '#21A58B', '-'),
+        'hoeffding_tree': ('Hoeffding Tree', '#0B2F4F', '--'),
+    }
+    set_plot_style(plotting_config, aspect_ratio=0.98, dpi=400)
+    fig, axes = plt.subplots(2, 1, sharex=True, sharey=True)
+
+    for ax, city, panel in zip(axes, ('Lisboa', 'Porto'), ('a', 'b')):
+        for model, (label, colour, linestyle) in models.items():
+            records = predictions.loc[
+                (predictions['city'] == city)
+                & (predictions['representation'] == representation)
+                & (predictions['model'] == model)
+            ].copy()
+            
+            records['timestamp'] = pd.to_datetime(records['timestamp'])
+            records = records.sort_values('timestamp').reset_index(drop=True)
+            if len(records) < window_size:
+                raise ValueError(
+                    f'{city}/{representation}/{model}: need at least {window_size} predictions'
+                )
+                
+            if records['timestamp'].isna().any() or records['timestamp'].duplicated().any():
+                raise ValueError(f'{city}/{model}: invalid or duplicated timestamps')
+
+            records['rolling_macro_f1'] = rolling_macro_f1(records, window_size) * 100
+            visible = records.iloc[window_size - 1::sample_every]
+            # Also show the last available observation if sampling missed it.
+            if visible.index[-1] != records.index[-1]:
+                visible = pd.concat([visible, records.iloc[[-1]]])
+                
+            ax.plot(
+                visible['timestamp'], visible['rolling_macro_f1'],
+                label=label, color=colour, linestyle=linestyle, linewidth=1.15,
+            )
+
+        ax.set_title(f'({panel}) {city}')
+        ax.set_ylabel(r'Rolling Macro-F1 (\%)')
+        ax.grid(axis='y', alpha=0.25)
+        ax.set_axisbelow(True)
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+
+    axes[0].legend(loc='best', frameon=False)
+    axes[1].set_xlabel('Evaluation time')
+    axes[1].xaxis.set_major_locator(mdates.YearLocator())
+    axes[1].xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+    axes[1].xaxis.set_minor_locator(mdates.MonthLocator(interval=3))
+    fig.suptitle(f'Rolling Macro-F1 over time --- Representation {representation}')
+    fig.tight_layout()
+    plt.show()
+    save_figure(fig, 'model_performance_over_time')
