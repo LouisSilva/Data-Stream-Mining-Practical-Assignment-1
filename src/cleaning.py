@@ -39,7 +39,7 @@ def apply_domain_rules(df: pd.DataFrame, rules: dict) -> pd.DataFrame:
     return pd.DataFrame(report_rows)
 
 
-def apply_correct_types(df: pd.DataFrame, column_types: dict, date_format: str):
+def apply_correct_types(df: pd.DataFrame, column_types: dict, date_format: str) -> None:
     """
     Converts all observations in a column to a specified type:
     

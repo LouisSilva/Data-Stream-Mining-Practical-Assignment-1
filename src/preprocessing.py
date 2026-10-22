@@ -24,6 +24,7 @@ _RAIN_FREQUENCY = re.compile(r"^rainy_hours([1-9][0-9]*)$")
 
 def _add_temporal_feature(df: pd.DataFrame, feature: str) -> None:
     """Add one specified, past-only temporal feature to df."""
+    # The C^(N)_t rolling window
     rain_match = _RAIN_FREQUENCY.fullmatch(feature)
     if rain_match:
         window = int(rain_match.group(1))
