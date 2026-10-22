@@ -400,7 +400,7 @@
 	% =============================================================================
 	\instruction{This section is primarily the responsibility of Student B. Use the same analytical logic applied to City A so that the subsequent comparison is fair. Characterise data quality, descriptive behaviour, target distribution, temporal behaviour, and rolling/window evidence. Explain the operational meaning of the evidence. Suggested length: about one page.}
 	
-	In the \CityB\ stream, there were no missing values, no duplicates, and each observation was exactly one hour after its preceding observation. Furthermore, the gathered weather variables $T_t,\,H_t,\,P_t$ and $W_t$ were all within their correct domains. As a result, no cleaning was necessary. The binary target distribution for $y_t \in \{0,1\}$, defined in \autoref{eq:rain-event}, is:
+	Like the \CityA\ stream, the \CityB\ stream had no missing values, no duplicates, and each observation was exactly one hour after its preceding observation. Similarly, the gathered weather variables $T_t,\,H_t,\,P_t$ and $W_t$ were all within their correct domains. As a result, no cleaning was necessary. The binary target distribution for $y_t \in \{0,1\}$, defined in \autoref{eq:rain-event}, is:
 	
 	\begin{align}
 		\Pr(y_t = 1) \;&\approx\; 0.204, \\
