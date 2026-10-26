@@ -334,35 +334,46 @@
 	Before we analyse \CityA\ and \CityB, we will define some statistics. Let
 	
 	\begin{equation}
-		W^T_m \;\coloneqq\; \{ y_i : \tau_m \le \tau_i < \tau_{m+1} \},
+		W^T_m \;\coloneqq\; \{ i : \tau_m \le \tau_i < \tau_{m+1} \},
 	\end{equation}
 	
 	be a tumbling window where $m$ represents a given month, $\tau_m$ is the timestamp at the start of month $m$, $\tau_{m+1}$ is the timestamp at the start of month $m+1$, and $\tau_i$ is the timestamp associated with observation $i$. Then, the percentage of observations where there is a rain event in month $m$ is given by:
 	
 	\begin{equation}
 		\label{eq:R_m}
-		R_m \;\coloneqq\; \frac{100}{\left\lvert W^T_m \right\rvert} \sum_{y_i \in W^T_m} y_i, \qquad R_m \in [0, 100].
+		R_m \;\coloneqq\; \frac{100}{\left\lvert W^T_m \right\rvert} \sum_{i \in W^T_m} y_i, \qquad R_m \in [0, 100].
 	\end{equation}
 	
 	Specifically, $R_m$ denotes the percentage of observations in a given month $m$ that were rain events. In addition, let
 	
 	\begin{equation}
-		W^{(24)}_{t-1} \;\coloneqq\; \{y_{t-24}, y_{t-23}, \dotsc, y_{t-1}\},
+		W^{(24)}_{t-1} \;\coloneqq\; \{t-24, t-23, \dotsc, t-1\},
 	\end{equation}
 	
 	be a sliding window containing the past $24$ observations. Then, the number of rain-event hours in the past $24$ hours is given by:
 	
 	\begin{equation}
 		\label{eq:C_t^(24)}
-		C^{(24)}_t \;\coloneqq \sum_{y_i \in W^{(24)}_{t-1}} y_i, \qquad C^{(24)}_t \in \{0, 1, \dotsc, 24\}.
+		C^{(24)}_t \;\coloneqq \sum_{i \in W^{(24)}_{t-1}} y_i, \qquad C^{(24)}_t \in \{0, 1, \dotsc, 24\}.
 	\end{equation}
 	
 	% =============================================================================
 	\subsection{City A Analysis: \CityA}
 	% =============================================================================
 	\instruction{This section is primarily the responsibility of Student A. Characterise the stream for City A before interpreting the models. Include data quality observations, descriptive statistics, target class distribution, temporal behaviour, rolling/window evidence, and at least one analysis that is relevant to the assigned business context. Explain what the evidence means; do not simply describe the shape of a chart. Suggested length: about one page.}
+	
+	The \CityA\ stream had no missing values, no duplicates, and each observation was exactly one hour after its preceding observation. The gathered weather variables $T_t,\,H_t,\,P_t$ and $W_t$ were all within their correct domains. As a result, no cleaning was necessary. The binary target distribution for $y_t \in \{0,1\}$, defined in \autoref{eq:rain-event}, is:
+	
+	\begin{align}
+		\Pr(y_t = 1) \;&\approx\; 0.121, \\
+		\Pr(y_t = 0) \;&\approx\; 0.879.
+	\end{align}
 
-	The \CityA\ stream contains $52{,}608$ hourly observations from 1 January 2020 to 31 December 2025. The notebook checks found no missing values or duplicated rows, no duplicated timestamps, and no non-hourly transitions. With the target defined in \autoref{eq:rain-event}, $6{,}348$ observations ($12.1\%$) are rain events and $46{,}260$ ($87.9\%$) are non-events.
+	This gives a positive-event rate of $12.1\%$, as shown in \autoref{tab:city-a-profile}. Equivalently, this means $12.1\%$ of the observations had at least $0.1\mathrm{mm}$ of precipitation.
+	
+	The observed annual rain-event rates ranged from $9.53\%$ in 2023 to $15.57\%$ in 2025. By season, the event rate was lowest in summer in each year, ranging from $1.90\%$ to $4.89\%$. The peak hourly event rate occurred at 14:00 in five of the six years, and at 13:00 in 2022; aggregated across all years, 14:00 had a $20.30\%$ event rate compared with the overall hourly rate of $12.07\%$. Thursday was the highest-risk weekday at $12.98\%$, only modestly above the overall rate, so hour-of-day variation is the clearer observed scheduling signal. These are historical associations, not guarantees about future weather.
+
+	Among rain-event observations, $99.8\%$ had relative humidity of at least $50\%$. For the preceding-24-hour count, $C^{(24)}_t$, the median was $0$, the 90th percentile was $10$, and the 95th percentile was $15$ (out of a possible maximum of 24). This indicates that the typical rolling window is event-free, while the upper tail includes substantial clustering of rain-event hours. Rain-event episodes had a median duration of 2 hours, a 90th-percentile duration of 8 hours, and a maximum duration of 36 hours, evidence that longer wet spells can pose sustained interruption risk even though they are not typical.
 	
 	\begin{table}[H]
 		\centering
@@ -373,26 +384,19 @@
 			\textbf{Indicator} & \textbf{Value} & \textbf{Why it matters} \\
 			\midrule
 			Number of observations & $52{,}608$ & Size of the hourly stream \\
-			Positive-event rate (\%) & $12.1\%$ & Frequency of observations meeting the rain-event definition \\
-			$Q_{0.95}(P_t)$ & $0.3\mathrm{mm}$ & Upper-tail hourly precipitation statistic \\
+			Positive-event rate & $12.1\%$ & Frequency of observations meeting the rain-event definition \\
+			$Q_{0.95}(P_t)$ & $0.3\mathrm{mm}$ & Characterises upper-tail hourly precipitation \\
+			$Q_{0.90}(C^{(24)}_t)$ & $10$ hours & Characterises upper-tail concentration of rain events within a 24-hour sliding window \\
+			$\mathrm{median} \left(C^{(24)}_t \right)$ & $0$ hours & Characterises the typical amount of rain events within a 24-hour sliding window \\
 			$\Pr(H_t \geq 50\% \mid y_t=1)$ & $99.8\%$ & Humidity level among rain-event observations \\
-			Median $C^{(24)}_t$ & $0$ hours & Median number of rain-event hours in the preceding 24 observations \\
-			$Q_{0.90}(C^{(24)}_t)$ & $10$ hours & Upper-tail count of rain-event hours in the preceding 24 observations \\
-			$Q_{0.95}(C^{(24)}_t)$ & $15$ hours & More extreme concentration of rain-event hours in the preceding 24 observations \\
-			$Q_{0.90}$ rain-episode duration & $8$ hours & Length of a long but relatively common continuous rain episode \\
-			Maximum rain-episode duration & $36$ hours & Longest observed uninterrupted run of rain-event hours \\
-			Annual event-rate range & $9.5\%$--$15.6\%$ & Observed variation across calendar years (2020--2025) \\
 			\bottomrule
 		\end{tabularx}
 	\end{table}
-
-	The observed annual rain-event rates ranged from $9.53\%$ in 2023 to $15.57\%$ in 2025. By season, the event rate was lowest in summer in each year, ranging from $1.90\%$ to $4.89\%$. The peak hourly event rate occurred at 14:00 in five of the six years, and at 13:00 in 2022; aggregated across all years, 14:00 had a $20.30\%$ event rate compared with the overall hourly rate of $12.07\%$. Thursday was the highest-risk weekday at $12.98\%$, only modestly above the overall rate, so hour-of-day variation is the clearer observed scheduling signal. These are historical associations, not guarantees about future weather.
-
-	Among rain-event observations, $99.8\%$ had relative humidity of at least $50\%$. For the preceding-24-hour count, $C^{(24)}_t$, the median was $0$, the 90th percentile was $10$, and the 95th percentile was $15$ (out of a possible maximum of 24). This indicates that the typical rolling window is event-free, while the upper tail includes substantial clustering of rain-event hours. Rain-event episodes had a median duration of 2 hours, a 90th-percentile duration of 8 hours, and a maximum duration of 36 hours, evidence that longer wet spells can pose sustained interruption risk even though they are not typical.
 	
-	\reportfigure{figures/Lisboa_monthly_rain_event_rate.pdf}{Monthly percentage of observations classified as rain events in \CityA\ from \HistoricalPeriod.}{fig:lisboa-monthly-rain-event-rate}
 	
-	\reportfigure{figures/Lisboa_distribution_of_rainy_hours.pdf}{Distribution of rain-event hours in the preceding 24 observations, $C^{(24)}_t$, for \CityA. The vertical axis uses a logarithmic scale.}{fig:lisboa-distribution-of-rainy-hours}
+	\reportfigure{figures/Lisboa\_monthly\_rain\_event\_rate.pdf}{Plotting the monthly rain-event rate $R_m$ for \CityA\ from \HistoricalPeriod.}{fig:lisboa-monthly-rain-event-rate}
+	
+	\reportfigure{figures/Lisboa\_distribution\_of\_rainy\_hours.pdf}{Plotting the distribution of rainy hours in the past $24$ hours, $C^{(24)}_t$, for \CityA\ from \HistoricalPeriod. The $y$-axis is plotted on a log scale.}{fig:lisboa-distribution-of-rainy-hours}
 	
 	
 	% =============================================================================
@@ -427,18 +431,19 @@
 			\toprule
 			\textbf{Indicator} & \textbf{Value} & \textbf{Why it matters} \\
 			\midrule
-			Number of observations & $52608$ & Size of analysed stream \\
-			Positive-event rate (\%) & $20.4\%$ & Frequency of rain-related interruption \\
+			Number of observations & $52608$ & Size of the hourly stream \\
+			Positive-event rate & $20.4\%$ & Frequency of observations meeting the rain-event definition \\
 			$Q_{0.95}(P_t)$ & $0.9\mathrm{mm}$ & Characterises upper-tail hourly precipitation \\
-			$Q_{0.90} \left(C^{(24)}_t \right)$ & 17 & Characterises upper-tail concentration of rain events within a 24-hour sliding window \\
-			$\mathrm{median} \left(C^{(24)}_t \right)$ & $0$ & Characterises the typical amount of rain events within a 24-hour sliding window \\
+			$Q_{0.90} \left(C^{(24)}_t \right)$ & $17$ hours & Characterises upper-tail concentration of rain events within a 24-hour sliding window \\
+			$\mathrm{median} \left(C^{(24)}_t \right)$ & $0$ hours & Characterises the typical amount of rain events within a 24-hour sliding window \\
+			$\Pr(H_t \geq 50\% \mid y_t=1)$ & $99.9\%$ & Humidity level among rain-event observations \\
 			\bottomrule
 		\end{tabularx}
 	\end{table}
 	
-	\reportfigure{figures/Porto_monthly_rain_event_rate.pdf}{Plotting the monthly rain-event rate $R_m$ for \CityB\ from \HistoricalPeriod.}{fig:porto-monthly-rain-event-rate}
+	\reportfigure{figures/Porto\_monthly\_rain\_event\_rate.pdf}{Plotting the monthly rain-event rate $R_m$ for \CityB\ from \HistoricalPeriod.}{fig:porto-monthly-rain-event-rate}
 	
-	\reportfigure{figures/Porto_distribution_of_rainy_hours.pdf}{Plotting the distribution of rainy hours in the past $24$ hours, $C^{(24)}_t$, for \CityB\ from \HistoricalPeriod. The $y$-axis is plotted on a log scale.}{fig:porto-distribution-of-rainy-hours}
+	\reportfigure{figures/Porto\_distribution\_of\_rainy\_hours.pdf}{Plotting the distribution of rainy hours in the past $24$ hours, $C^{(24)}_t$, for \CityB\ from \HistoricalPeriod. The $y$-axis is plotted on a log scale.}{fig:porto-distribution-of-rainy-hours}
 	
 	
 	% =============================================================================
@@ -583,7 +588,7 @@
 					\ForAll{models $m$}
 						\State Initialise a fresh instance of model $m$
 						\State Warm-up $m$ using the earliest $25\%$ of chronological observations
-						\ForAll{observations $t$ in chronological order}
+						\ForAll{remaining observations $t$ in chronological order}
 							\State \textbf{Predict:} Obtain $\hat{y}_t$ using $X_t^r$ and record prediction time
 							\State \textbf{Evaluate:} Update metrics and confusion matrix using $(y_t, \hat{y}_t)$
 							\State \textbf{Learn:} Update $m$ using $(X^r_t, y_t)$ and record update time
@@ -698,11 +703,11 @@
 	\instruction{Provide two separate conclusions. The business recommendation must be supported by descriptive, temporal and operational evidence, not by whichever classifier achieved the highest score. The technical recommendation must be supported by predictive and computational evidence. State the scope of each recommendation carefully. Suggested length: about half a page.}
 	
 	\begin{businessbox}[title=Business Recommendation]
-		\autoref{tab:business-comparison} and \autoref{fig:city-comparison} shows that \CityA\ has a smaller median length of rainy periods, larger median length of dry periods, a lower mean number of rain-event hours in the preceding 24 hours, conditional on at least one rain-event occurring in that window, a smaller monthly rain-event rate variability, and a smaller positive-event rate. Based on these indicators, our recommendation is that \CityA\ is better for scheduling walking tours due to its fewer rain interruptions compared to \CityB.
+		\autoref{tab:business-comparison} and \autoref{fig:city-comparison} shows that \CityA\ has a smaller median length of rainy periods, larger median length of dry periods, a lower mean number of rain-event hours in the preceding $24$ hours, conditional on at least one rain-event occurring in that window, a smaller monthly rain-event rate variability, and a smaller positive-event rate. Based on these indicators, our recommendation is that \CityA\ is better for scheduling walking tours due to its fewer rain interruptions compared to \CityB.
 	\end{businessbox}
 	
 	\begin{keybox}[title=Technical Recommendation]
-		Our technical recommendation for a streaming modelling approach for the continuous prediction of \EventTarget\ is to use the Hoeffding tree model with Representation A, with the parameters defined in \autoref{tab:model-config}. The Hoeffding tree model provides a favourable trade-off between macro-f1, recall, and computational cost. Furthermore, Representation B nearly doubled the update time of the Hoeffding tree, whilst only improving recall by 3.2 percentage points in \CityA\, but reducing it by 0.2 percentage points in \CityB. Online bagging provides a marginally better macro-F1 and recall, but is approximately 5 times slower.
+		Our technical recommendation for a streaming modelling approach for the continuous prediction of \EventTarget\ is to use the Hoeffding tree model with Representation A, with the parameters defined in \autoref{tab:model-config}. The Hoeffding tree model provides a favourable trade-off between macro-f1, recall, and computational cost. We chose Representation A because Representation B nearly doubled the update time of the model, whilst only improving recall by $3.2$ percentage points in \CityA\ and reducing it by $0.2$ percentage points in \CityB. Online bagging provides a marginally better macro-F1 and recall, but is approximately $5$ times slower.
 	\end{keybox}
 	
 	
@@ -711,23 +716,16 @@
 	% =============================================================================
 	\instruction{Explain what the study cannot establish. Consider the limited set of weather variables, the selected historical period, the simplified binary event definition, external business factors not included in Open-Meteo, computational measurements being environment-specific, and any modelling assumptions. Do not introduce new results here.}
 	
-	Firstly, the model hyperparameters were not tuned. Secondly, the study only used a very limited set of weather variables. 
+	The observations were recorded hourly, and a rain-event was defined when precipitation reached at least $0.1\mathrm{mm}$ during an hour. The recorded precipitation, however, may have occurred only within part of that hour, not the whole hour. Furthermore, precipitation exceeding this threshold does not necessarily imply that a walking tour would be interrupted.
 	
-	The observations only came hourly, and then we constructed a rain-event if there was 0.1mm or more of precipitation in that hour. That 0.1mm of precipitation couldve been concentrated on a much smaller period of time, e.g., 10 minutes, but then we just say that the whole hour is rainy.
-	
-	The binary rain-event was not based on any empirical evidence. We did not actually measure that 0.1mm or more of precipitation per hour actually produces enough rain to permit cancelling a tour.
-	
-	The model doesnt take into account extra-ordinary weather events like prolonged storms
-	
-	Weather is chaotic?
-	
+	Secondly, the model hyperparameters were not tuned, so the reported results may not represent the best achievable performance of each model. Lastly, the study used a very limited set of weather variables from a 6-year historical period.
 	
 	% =============================================================================
 	\section{AI Assistance Statement}
 	% =============================================================================
 	\instruction{This statement is mandatory. Adapt one of the formulations below truthfully. Delete the option that does not apply. Generative AI may assist with programming tasks, but it may not perform the interpretation of experimental results, discussion, business recommendation, technical recommendation, or evidence-based conclusions.}
 	
-	Generative AI tools were used to assist with Python debugging, plotting syntax, LaTeX syntax, and code organisation. They were not used to interpret experimental results or produce the analysis, discussion, business recommendation, technical recommendation, or evidence-based conclusions.
+	Generative AI tools were used to assist with Python debugging, Matplotlib plotting code implementation (with plot design decisions made independently), LaTeX syntax, and code organisation. They were not used to interpret experimental results or produce the analysis, discussion, business recommendation, technical recommendation, or evidence-based conclusions.
 	
 	% =============================================================================
 	% REFERENCES
