@@ -18,6 +18,7 @@ jupyter_core==5.9.1
 kiwisolver==1.5.1
 matplotlib==3.11.2
 matplotlib-inline==0.2.2
+narwhals==2.27.1
 nest-asyncio2==1.7.3
 numpy==2.5.3
 packaging==26.3
@@ -34,6 +35,9 @@ python-dateutil==2.9.0.post0
 PyYAML==6.0.3
 pyzmq==27.2.0
 requests==2.34.2
+river==0.26.1
+scipy==1.18.1
+seaborn==0.13.2
 six==1.17.0
 stack-data==0.6.3
 tornado==6.5.10

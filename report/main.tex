@@ -375,6 +375,10 @@
 
 	Among rain-event observations, $99.8\%$ had relative humidity of at least $50\%$. For the preceding-24-hour count, $C^{(24)}_t$, the median was $0$, the 90th percentile was $10$, and the 95th percentile was $15$ (out of a possible maximum of 24). This indicates that the typical rolling window is event-free, while the upper tail includes substantial clustering of rain-event hours. Rain-event episodes had a median duration of 2 hours, a 90th-percentile duration of 8 hours, and a maximum duration of 36 hours, evidence that longer wet spells can pose sustained interruption risk even though they are not typical.
 	
+	The distribution of $H_t$ is negatively skewed, with a skewness of $-0.71$ and median of $78\%$. The distribution of $T_t$ is relatively symmetric, with the mean and median being approximately equal to $17\,^\circ\mathrm{C}$, and the standard deviation being $5.3\,^\circ\mathrm{C}$. The distribution of $W_t$ is positively skewed, with a skewness of $0.65$ and median of $12\,\mathrm{km/h}$.
+	
+	\autoref{fig:lisboa-monthly-rain-event-rate} shows the monthly rain-event evolution by plotting $R_m$ (defined in \autoref{eq:R_m}) for all $m$. The rain-event rate generally peaks in winter and declines in summer. \autoref{fig:lisboa-distribution-of-rainy-hours} shows the distribution of rainy hours within a 24-hour sliding window by plotting $C^{(24)}_t$. The highest frequency occurs at $C^{(24)}_t = 0$, whilst frequencies generally decline as the rain-event count increases. Counts between one and four rain-event hours have approximately equal frequencies.
+	
 	\begin{table}[H]
 		\centering
 		\caption{Selected descriptive, event, and temporal statistics for \CityA.}
@@ -631,11 +635,11 @@
 				& \textbf{Pred. ms/event}
 				& \textbf{Update ms/event} \\
 				\midrule
-				GaussianNB & \splitcell{92.1}{89.2} & \splitcell{75.1}{79.4} & \splitcell{84.8}{90.8} & \splitcell{40.2}{50.8} & \splitcell{0.052}{0.052} & \splitcell{0.002}{0.002} \\[4pt]
+				GaussianNB & \splitcell{92.1}{89.2} & \splitcell{75.1}{79.4} & \splitcell{84.8}{90.8} & \splitcell{40.2}{50.8} & \splitcell{0.051}{0.052} & \splitcell{0.002}{0.002} \\[4pt]
 				Online Logistic & \splitcell{92.5}{90.4} & \splitcell{77.4}{82.7} & \splitcell{83.1}{88.2} & \splitcell{45.7}{59.7} & \splitcell{0.002}{0.002} & \splitcell{0.005}{0.005} \\[4pt]
-				Hoeffding Tree & \splitcell{93.4}{92.2} & \splitcell{83.6}{87.8} & \splitcell{74.4}{80.4} & \splitcell{67.8}{80.6} & \splitcell{0.005}{0.006} & \splitcell{0.009}{0.009} \\[4pt]
-				Online Bagging & \splitcell{93.5}{92.2} & \splitcell{84.2}{87.8} & \splitcell{73.1}{80.5} & \splitcell{71.0}{80.5} & \splitcell{0.031}{0.031} & \splitcell{0.049}{0.050} \\[4pt]
-				Adaptive Random \allowbreak Forest & \splitcell{92.6}{90.4} & \splitcell{79.9}{84.4} & \splitcell{75.1}{78.8} & \splitcell{55.7}{71.0} & \splitcell{0.027}{0.028} & \splitcell{0.120}{0.140} \\
+				Hoeffding Tree & \splitcell{93.4}{92.2} & \splitcell{83.6}{87.8} & \splitcell{74.4}{80.4} & \splitcell{67.8}{80.6} & \splitcell{0.006}{0.006} & \splitcell{0.009}{0.010} \\[4pt]
+				Online Bagging & \splitcell{93.5}{92.2} & \splitcell{84.2}{87.8} & \splitcell{73.1}{80.5} & \splitcell{71.0}{80.5} & \splitcell{0.032}{0.032} & \splitcell{0.048}{0.050} \\[4pt]
+				Adaptive Random \allowbreak Forest & \splitcell{92.6}{90.4} & \splitcell{79.9}{84.4} & \splitcell{75.1}{78.8} & \splitcell{55.7}{71.0} & \splitcell{0.028}{0.028} & \splitcell{0.124}{0.142} \\
 				\bottomrule
 			\end{tabularx}
 		}
@@ -666,11 +670,11 @@
 				& \textbf{Pred. ms/event}
 				& \textbf{Update ms/event} \\
 				\midrule
-				GaussianNB & \splitcell{91.5}{89.7} & \splitcell{77.1}{82.4} & \splitcell{69.4}{81.2} & \splitcell{51.2}{63.1} & \splitcell{0.062}{0.062} & \splitcell{0.004}{0.004} \\[4pt]
+				GaussianNB & \splitcell{91.5}{89.7} & \splitcell{77.1}{82.4} & \splitcell{69.4}{81.2} & \splitcell{51.2}{63.1} & \splitcell{0.065}{0.061} & \splitcell{0.004}{0.004} \\[4pt]
 				Online Logistic & \splitcell{92.7}{90.6} & \splitcell{79.3}{83.9} & \splitcell{79.3}{83.2} & \splitcell{51.7}{65.9} & \splitcell{0.003}{0.003} & \splitcell{0.009}{0.009} \\[4pt]
-				Hoeffding Tree & \splitcell{93.2}{92.0} & \splitcell{83.8}{87.5} & \splitcell{71.7}{79.6} & \splitcell{71.0}{80.4} & \splitcell{0.006}{0.006} & \splitcell{0.016}{0.017} \\[4pt]
+				Hoeffding Tree & \splitcell{93.2}{92.0} & \splitcell{83.8}{87.5} & \splitcell{71.7}{79.6} & \splitcell{71.0}{80.4} & \splitcell{0.006}{0.006} & \splitcell{0.016}{0.018} \\[4pt]
 				Online Bagging & \splitcell{93.5}{92.2} & \splitcell{84.1}{87.8} & \splitcell{73.1}{80.1} & \splitcell{70.9}{80.8} & \splitcell{0.033}{0.033} & \splitcell{0.082}{0.086} \\[4pt]
-				Adaptive Random \allowbreak Forest & \splitcell{92.2}{90.3} & \splitcell{79.0}{84.3} & \splitcell{73.1}{77.8} & \splitcell{54.3}{71.5} & \splitcell{0.027}{0.027} & \splitcell{0.144}{0.165} \\
+				Adaptive Random \allowbreak Forest & \splitcell{92.2}{90.3} & \splitcell{79.0}{84.3} & \splitcell{73.1}{77.8} & \splitcell{54.3}{71.5} & \splitcell{0.027}{0.028} & \splitcell{0.145}{0.167} \\
 				\bottomrule
 			\end{tabularx}
 		}
@@ -684,9 +688,9 @@
 	
 	Across all five models and both representations, \CityB\ achieves higher macro-F1, precision, and recall than \CityA. Recall is especially important because it measures the proportion of times the model predicted it was going to rain, given that it actually rained. Conversely, across all five models and both representations, \CityA\ achieves higher accuracy than \CityB, which may partly reflect its larger proportion of dry observations. Interestingly, in \autoref{sec:comparative-data-analysis} we discussed how \CityB\ had a higher monthly rain-event rate variability, and a larger upper tail in its distribution of rain-event hours in the preceding 24 hours. One possible contributing factor is that \CityB\ has a higher positive-event rate and more balanced target distribution than \CityA.
 	
-	\autoref{fig:model-performance-over-time} shows two panels, one for \CityA\ and one for \CityB, where the rolling macro-F1 score over a 720-observation (approximately 30-day) window was plotted over time for the online bagging and Hoeffding tree models under Representation A. For \CityB, the Hoeffding tree model almost perfectly follows the online bagging model. For \CityA\, however, their respective performances are more varied. For both models in \CityB, the rolling macro-F1 occasionally declines sharply before recovering. In \CityA, these declines appear more frequent and variable. The sharp declines to approximately $50\%$ occur during windows with very few rain events, where the models failed to detect any of those events despite achieving an accuracy close to $100\%$. This illustrates how high accuracy can conceal missed rain events in imbalanced streams.
+	\autoref{fig:model-performance-over-time} shows two panels, one for \CityA\ and one for \CityB, where the rolling macro-F1 score over a 720-observation (approximately 30-day) window was plotted over time for the online bagging and Hoeffding tree models under Representation A. For \CityB, the Hoeffding tree model almost perfectly follows the online bagging model. For \CityA\, however, their respective performances are more varied. For both models in \CityB, the rolling macro-F1 occasionally declines sharply before recovering. In \CityA, these declines appear more frequent and variable. The sharp declines to approximately $50\%$ occur during windows with very few rain events, where the models failed to detect any of those events despite achieving an accuracy close to $100\%$. This illustrates how high accuracy can conceal missed rain events in imbalanced streams. \autoref{fig:confusion-matrices-representation-A} shows the confusion matrices for the Hoeffding tree and online bagging models under Representation A.
 	
-	For all models, the update time was larger with Representation B compared to A. Similarly, prediction time generally increased with Representation B, although it remained unchanged for Hoeffding trees in \CityB\ and adaptive random forest in \CityA, and declined by $0.001$ milliseconds for adaptive random forest in \CityB. The Hoeffding tree model is considerably faster than online bagging and adaptive random forest, whilst achieving comparable macro-F1 and recall to online bagging, and generally higher macro-F1 and recall than adaptive random forest.
+	For all models, the update time was larger with Representation B compared to A. Similarly, prediction time generally increased with Representation B, although it remained unchanged for Hoeffding trees in both cities and adaptive random forest in \CityB, and declined by $0.001$ milliseconds for adaptive random forest in \CityA. The Hoeffding tree model is considerably faster than online bagging and adaptive random forest, whilst achieving comparable macro-F1 and recall to online bagging, and generally higher macro-F1 and recall than adaptive random forest.
 	
 	In conclusion, the strongest model in terms of macro-F1 was online bagging. It achieved the highest macro-F1 in both cities under both representations, except that it tied with Hoeffding trees in \CityB\ under Representation A. Although the prediction and update times of online bagging were approximately 5 times those of Hoeffding trees, the observations in the data stream arrive hourly, so the additional processing time is unlikely to have an operational impact. Nevertheless, online bagging's small macro-F1 advantage must be weighed against its higher computational cost.
 	
@@ -703,7 +707,7 @@
 	\instruction{Provide two separate conclusions. The business recommendation must be supported by descriptive, temporal and operational evidence, not by whichever classifier achieved the highest score. The technical recommendation must be supported by predictive and computational evidence. State the scope of each recommendation carefully. Suggested length: about half a page.}
 	
 	\begin{businessbox}[title=Business Recommendation]
-		\autoref{tab:business-comparison} and \autoref{fig:city-comparison} shows that \CityA\ has a smaller median length of rainy periods, larger median length of dry periods, a lower mean number of rain-event hours in the preceding $24$ hours, conditional on at least one rain-event occurring in that window, a smaller monthly rain-event rate variability, and a smaller positive-event rate. Based on these indicators, our recommendation is that \CityA\ is better for scheduling walking tours due to its fewer rain interruptions compared to \CityB.
+		\autoref{tab:business-comparison} and \autoref{fig:city-comparison} shows that \CityA\ has a smaller median length of rainy periods, larger median length of dry periods, a smaller monthly rain-event rate variability, a smaller positive-event rate, and a lower mean number of rain-event hours in the preceding $24$ hours, conditional on at least one rain-event occurring in that window. Based on these indicators, our recommendation is that \CityA\ is better for scheduling walking tours due to its fewer rain interruptions compared to \CityB.
 	\end{businessbox}
 	
 	\begin{keybox}[title=Technical Recommendation]
@@ -744,6 +748,8 @@
 	\appendix
 	\section{Optional Appendix}
 	\instruction{Use the appendix only for supporting material that is useful for auditability but not essential to the main argument: additional confusion matrices, parameter grids, supplementary plots, or compact implementation notes. The appendix does not compensate for missing interpretation in the main report. Delete this appendix if it is not needed.}
+	
+	\reportfigure{figures/confusion\_matrices\_representation\_A.pdf}{Confusion matrices for the Hoeffding tree and online bagging models under Representation A in (a-b) \CityA\ and (c-d) \CityB. Rows represent actual classes and columns represent predicted classes. Each cell reports the number of observations and the corresponding percentage within the actual class. Colour intensity represents the within-class proportion.}{fig:confusion-matrices-representation-A}
 	
 	
 	% =============================================================================

@@ -394,3 +394,131 @@ def plot_model_performance_over_time(
     
     plt.show()
     save_figure(fig, 'model_performance_over_time')
+
+
+def plot_confusion_matrices(
+    plotting_config: dict,
+    results: ExperimentResults,
+    representation: str = 'A',
+) -> None:
+    """Plot confusion matrices for Hoeffding Tree and Online Bagging."""
+
+    if representation not in ('A', 'B'):
+        raise ValueError('representation must be A or B')
+
+    summary = results.summary
+    if summary.empty:
+        raise ValueError('No experiment results; run the experiments first')
+
+    models = (
+        ('hoeffding_tree', 'Hoeffding Tree'),
+        ('online_bagging', 'Online Bagging'),
+    )
+
+    cities = ('Lisboa', 'Porto')
+    outcomes = (('TN', 'FP'), ('FN', 'TP'))
+
+    set_plot_style(plotting_config, aspect_ratio=0.96, dpi=400)
+    fig, axes = plt.subplots(2, 2, layout='constrained')
+
+    for row, city in enumerate(cities):
+        for col, (model, model_label) in enumerate(models):
+            ax = axes[row, col]
+
+            selected = summary.loc[
+                (summary['city'] == city)
+                & (summary['representation'] == representation)
+                & (summary['model'] == model)
+            ]
+
+            if len(selected) != 1:
+                plt.close(fig)
+                raise ValueError(
+                    f'Expected one result for {city}/{representation}/{model}, '
+                    f'found {len(selected)}'
+                )
+
+            record = selected.iloc[0]
+
+            # Rows: actual dry/rain; columns: predicted dry/rain
+            matrix = np.array([
+                [record['TN'], record['FP']],
+                [record['FN'], record['TP']],
+            ], dtype=int)
+
+            # Normalise each row by the number of actual observations belonging to that class.
+            class_totals = matrix.sum(axis=1, keepdims=True)
+
+            proportions = np.divide(
+                matrix,
+                class_totals,
+                out=np.zeros_like(matrix, dtype=float),
+                where=class_totals != 0,
+            )
+
+            image = ax.imshow(
+                proportions,
+                cmap='Blues',
+                vmin=0,
+                vmax=1,
+            )
+
+
+            # Display both raw counts and within-class percentages.
+            for i in range(2):
+                for j in range(2):
+                    percentage = (
+                        f'{100 * proportions[i, j]:.1f}\\%'
+                        if class_totals[i, 0] > 0 else 'N/A'
+                    )
+
+                    text_color = (
+                        'white' if proportions[i, j] >= 0.55
+                        else '#0B2F4F'
+                    )
+                    
+                    ax.text(
+                        j, i - 0.1,
+                        f'{outcomes[i][j]}: {matrix[i, j]:,}',
+                        ha='center',
+                        va='center',
+                        color=text_color,
+                        fontsize=8,
+                    )
+                    
+                    ax.text(
+                        j, i + 0.1,
+                        f'({percentage})',
+                        ha='center',
+                        va='center',
+                        color=text_color,
+                        fontsize=8,
+                    )
+
+            panel = chr(97 + 2 * row + col)
+
+            ax.set_title(f'({panel}) {city} - {model_label}', fontsize=9)
+            ax.set_xticks((0, 1), labels=('Dry', 'Rain'))
+            ax.set_yticks((0, 1), labels=('Dry', 'Rain'))
+
+            if row == 1:
+                ax.set_xlabel('Predicted')
+
+            if col == 0:
+                ax.set_ylabel('Actual')
+
+            ax.tick_params(length=0)
+
+    colorbar = fig.colorbar(
+        image,
+        ax=axes,
+        shrink=0.77,
+        pad=0.025,
+    )
+
+    colorbar.set_label('Share of actual class')
+    colorbar.set_ticks((0, 0.5, 1))
+    colorbar.set_ticklabels((r'0\%', r'50\%', r'100\%'))
+
+    plt.show()
+    save_figure(fig, f'confusion_matrices_representation_{representation}')
