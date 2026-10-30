@@ -61,7 +61,7 @@
 \newcommand{\HistoricalPeriod}{2020-01-01 to 2025-12-31}
 \newcommand{\WarmupRule}{Earliest $25\%$ of chronological observations}
 \newcommand{\RandomSeed}{42}
-\newcommand{\SubmissionDate}{25 October 2026}
+\newcommand{\SubmissionDate}{1 November 2026}
 
 % TEMPLATE MODE:
 % Keep \draftinstructionstrue while writing to display guidance boxes.
@@ -121,7 +121,7 @@
 	urlcolor=Teal,
 	citecolor=Navy,
 	pdftitle={Practical Assignment I - Technical Report - \AssignmentCode},
-	pdfauthor={\StudentA\ and \StudentB}
+	pdfauthor={\StudentA}
 }
 
 \pagestyle{fancy}
@@ -240,11 +240,10 @@
 		\end{tcolorbox}
 		
 		\vspace{0.75cm}
-		\begin{tabularx}{\textwidth}{@{}YY@{}}
-			\textbf{Student A} & \textbf{Student B} \\
-			\StudentA & \StudentB \\
-			\StudentAID & \StudentBID \\
-			Primary city: \CityA & Primary city: \CityB \\
+		\begin{tabularx}{\textwidth}{@{}L{4.3cm}Y@{}}
+			\textbf{Student} & \StudentA \\
+			\textbf{Student ID} & \StudentAID \\
+			\textbf{Cities Analyzed} & \CityA\ and \CityB \\
 		\end{tabularx}
 		
 		\vfill
@@ -256,6 +255,13 @@
 		{\small\bfseries\color{Mint}TEMPLATE MODE - WRITING GUIDANCE IS CURRENTLY VISIBLE}
 		\fi
 		\vspace*{0.55cm}
+		
+		{\large\bfseries Submission Note:}\\[0.15cm]
+		{\normalsize\color{white!75}As previously agreed with the professor, this assignment is being
+			submitted individually. My original project partner moved to another
+			module after contributing to the Lisboa analysis, and I completed
+			the remaining project work as the sole student.}
+		
 	\end{titlepage}
 	\nopagecolor
 	\color{BodyText}
@@ -425,8 +431,8 @@
 	
 	Thus, almost all rain events occurred when the relative humidity was at least $50\%$. The distribution of $T_t$ is relatively symmetric, with the mean and median being approximately equal to $15.5\,^\circ\mathrm{C}$, and the standard deviation being $4.8\,^\circ\mathrm{C}$. The distribution of $W_t$ is positively skewed, with a skewness of $0.86$ and median of $13\,\mathrm{km/h}$.
 	
-	\autoref{fig:porto-monthly-rain-event-rate} shows the monthly rain-event evolution by plotting $R_m$ (defined in \autoref{eq:R_m}) for all $m$. Intuitively, the rain-event rate tends to peak in winter, and dip in summer. \autoref{fig:porto-distribution-of-rainy-hours} shows the distribution of rainy hours within a 24-hour sliding window by plotting $C^{(24)}_t$. As expected, most of the observation mass is on zero rain-event hours in the preceding 24 hours. However, after a steep decline, the distribution slowly tapers off. This suggests that most of the time it doesn't rain, but when it does, the length of the rainy spell is uncertain.
-	
+	\autoref{fig:porto-monthly-rain-event-rate} shows the monthly rain-event evolution by plotting $R_m$ (defined in \autoref{eq:R_m}) for all $m$. Intuitively, the rain-event rate tends to peak in winter, and dip in summer. \autoref{fig:porto-distribution-of-rainy-hours} shows the distribution of rainy hours within a 24-hour sliding window by plotting $C^{(24)}_t$. As expected, most of the observation mass is on zero rain-event hours in the preceding 24 hours. However, after a steep decline, the distribution slowly tapers off. This suggests that most 24-hour windows contain no rain-event hours, whilst some windows contain several, indicating that rain-event hours can be concentrated within certain periods.
+
 	\begin{table}[H]
 		\centering
 		\caption{Selected descriptive and event statistics for \CityB.}
@@ -558,7 +564,7 @@
 	
 	\subsection{Model configuration}
 	
-	\autoref{tab:model-config} shows the five models used and their selected parameters.
+	The five incremental models were implemented using the River Python library \parencite{river}, with their selected parameters shown in \autoref{tab:model-config}.
 	
 	\begin{table}[H]
 		\centering
@@ -711,7 +717,7 @@
 	\end{businessbox}
 	
 	\begin{keybox}[title=Technical Recommendation]
-		Our technical recommendation for a streaming modelling approach for the continuous prediction of \EventTarget\ is to use the Hoeffding tree model with Representation A, with the parameters defined in \autoref{tab:model-config}. The Hoeffding tree model provides a favourable trade-off between macro-f1, recall, and computational cost. We chose Representation A because Representation B nearly doubled the update time of the model, whilst only improving recall by $3.2$ percentage points in \CityA\ and reducing it by $0.2$ percentage points in \CityB. Online bagging provides a marginally better macro-F1 and recall, but is approximately $5$ times slower.
+		Our technical recommendation for a streaming modelling approach for the continuous prediction of \EventTarget\ is to use the Hoeffding tree model with Representation A, with the parameters defined in \autoref{tab:model-config}. The Hoeffding tree model provides a favourable trade-off between macro-f1, recall, and computational cost. We chose Representation A because Representation B nearly doubled the update time of the model, whilst only improving recall by $3.2$ percentage points in \CityA\ and reducing it by $0.2$ percentage points in \CityB. Online bagging generally achieves slightly higher macro-F1, whilst recall is comparable between the two models. Its prediction and update times, however, are approximately $5$ times those of the Hoeffding trees.
 	\end{keybox}
 	
 	

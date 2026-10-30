@@ -4,14 +4,17 @@ __pycache__/
 .DS_Store
 .ipynb_checkpoints/
 *.egg-info/
-results/
-temp/
 .vscode
 
-# Report stuff
+# LaTeX report stuff
 report/*
 !report/main.tex
 !report/figures/*
 !report/references.bib
 
 objective.md
+
+results/
+temp/
+
+*.zip

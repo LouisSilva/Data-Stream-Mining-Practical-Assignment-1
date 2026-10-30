@@ -25,7 +25,7 @@ This project uses **Python 3.12.3**.
 | `scipy` | `1.18.1` |
 | `seaborn` | `0.13.2` |
 
-The full dependency list for reproduction are specified in `requirements.txt`.
+The full dependency list for reproduction is specified in `requirements.txt`.
 
 ## Project Structure
 
@@ -39,6 +39,9 @@ The full dependency list for reproduction are specified in `requirements.txt`.
 │   ├── main.tex
 │   ├── references.bib
 │   └── figures/
+├── results/
+│   ├── report.txt
+│   └── predictions.csv
 ├── src/
 ├── practical_assignment.ipynb
 ├── config.yaml
@@ -48,6 +51,7 @@ The full dependency list for reproduction are specified in `requirements.txt`.
 
 - **`data/`** - Raw Open-Meteo JSON weather observations for Lisboa and Porto.
 - **`report/`** - LaTeX report source, references, and figures used in the report.
+- **`results/`** — Saved experiment outputs, including `report.txt` (text results report) and `predictions.csv` (per-observation predictions saved only for the Hoeffding Tree and Online Bagging models under Representation A, for generating selected plots).
 - **`src/`** - Python modules imported by `practical_assignment.ipynb` for loading, cleaning, preprocessing, modelling, evaluation, and plotting.
 - **`practical_assignment.ipynb`** - Main notebook containing exploratory city analyses, comparative data analysis, the data stream mining experiment, and code to generate report figures.
 - **`config.yaml`** - Open-Meteo API parameters, data paths, cleaning rules, feature settings, model parameters, evaluation settings, plotting configuration, and random seed.
