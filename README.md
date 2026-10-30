@@ -1,13 +1,13 @@
 # PA01 - Data Stream Mining: Lisboa vs Porto
 
-**Assignment code:** PA01
-**Student:** Louis Silva
-**City A:** Lisboa
-**City B:** Porto
-**Business scenario:** Urban Walking Tour Operator.
-**Prediction target:** T1 — binary rain event, with $y_t = 1$ when hourly precipitation is at least 0.1 mm, and $y_t = 0$ otherwise.
-**Historical period:** 1 January 2020 – 31 December 2025 (six calendar years)
-**Random seed:** `42` (defined in `config.yaml`)
+- **Assignment code:** PA01
+- **Student:** Louis Silva
+- **City A:** Lisboa
+- **City B:** Porto
+- **Business scenario:** Urban Walking Tour Operator.
+- **Prediction target:** T1 - Rain Event, with $y_t = 1$ when hourly precipitation is at least 0.1 mm, and $y_t = 0$ otherwise.
+- **Historical period:** 1 January 2020 - 31 December 2025 (six calendar years)
+- **Random seed:** `42` (defined in `config.yaml`)
 
 ## Python and Package Versions
 
